@@ -1,0 +1,49 @@
+GIT
+  remote: git://github.com/jacobo/showoff.git
+  revision: 66d7d69fb510ccbd12196526a509d57d2774651d
+  specs:
+    showoff (0.7.0)
+      gli (>= 1.3.2)
+      json
+      nokogiri
+      parslet
+      redcarpet
+      sinatra (~> 1.3)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    blankslate (2.1.2.4)
+    bluecloth (2.2.0)
+    coderay (1.0.7)
+    gli (1.6.0)
+    json (1.7.5)
+    method_source (0.8)
+    nokogiri (1.5.5)
+    parslet (1.4.0)
+      blankslate (~> 2.0)
+    pry (0.9.10)
+      coderay (~> 1.0.5)
+      method_source (~> 0.8)
+      slop (~> 3.3.1)
+    rack (1.4.1)
+    rack-protection (1.2.0)
+      rack
+    redcarpet (2.2.2)
+    sinatra (1.3.2)
+      rack (~> 1.3, >= 1.3.6)
+      rack-protection (~> 1.2)
+      tilt (~> 1.3, >= 1.3.3)
+    slop (3.3.2)
+    tilt (1.3.3)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  bluecloth
+  gli
+  nokogiri
+  pry
+  showoff!
+  sinatra (= 1.3.2)
