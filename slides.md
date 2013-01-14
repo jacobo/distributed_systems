@@ -1,6 +1,17 @@
 !SLIDE
 ### Living with Distributed Systems
 
+.notes I want to talk to you about what it's like to work at engine yard, and more specifically what it's like to work on borders.  By borders I mean the interactions between systems. And in a way this is inevitable. Even if we tried to consolidate our entire platform into a single monolithic ruby on rails application, we still have to communicate with every one of our customers servers running on ec2, and with our command line tools.  So despite beginning as a monolithic app, our engineers have had to deal with a distributed product form the beginning.  And coming in several years after that, I get the benefit of their mistakes. But, I still have room to make mistakes of my own and learn from them.
+
+!SLIDE
+### About Engine Yard
+
+!SLIDE
+### SSO
+
+!SLIDE
+## what's next
+
 what engine yard does
 
 The big picture
@@ -21,6 +32,12 @@ The hassles:
       hot to run tests, and contribute
         (Example of failure here: tresfiestas many-repo nightmare)
           attempted to fix with j-cash client is in the same repo as the server
+
+Figuring out the incremental deploy
+  This app introduces and API, which this other app needs, so bump this gem first, then deploy this, then release that, etc..
+
+Problem of the rails security hole... go upgrade all the rails version
+  But we WERE able to do 6 apps in just 1 day
 
 Case study LaBrea
   we use the production version of LaBrea with every staging cloud
