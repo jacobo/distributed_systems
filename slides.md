@@ -6,11 +6,117 @@
 !SLIDE
 ### About Engine Yard
 
+.notes we run servers on amazon, we coordinate things for you.  We bill our customers (billing system), we support our customers (zendesk integration), we have sales and marketing (salesforce integration).
+
+!SLIDE
+### Practically In Practice
+
+.notes In researching this topic I see lots of talks out there that spend a lot of type justifying SOA, or explaining why you want multiple systems. I am going to gloss over all of that and try to get to what I consider to be the meat of the problem. Which is the part I think is the hard part. The part where you're likely to make mistakes. And maybe I'm wrong, maybe deciding to do SOA in the first place is the hard part.  But nonetheless, let's proceed.
+
+!SLIDE
+### SOA Assumptions
+
+.notes I'm going to tell you a bunch of assumptions we make at EY about services. These might not be applicable to everyone or even the right set of assumptions for you. But these assumptions frame all of the services we write and will make it easier for me to talk about them. And having these assumptions commons to all services makes it easier for our development team to move between our main app and dependent services whose codebase they may have never looked at before.  So the assumptions are all very basic, but it's important that we have them.
+
+!SLIDE
+#### SOA Assumptions
+
+# A Server Providing a Service
+
+.notes There's something providing a service (server or provider)
+
+!SLIDE
+#### SOA Assumptions
+
+# A Client Consuming a Service
+
+.notes There's something consuming a service (client or consumer)
+
+!SLIDE
+#### SOA Assumptions
+
+# The ONLY way to communicate is HTTP
+
+.notes no shared database, no shared disk, no message bus. Nothing against message buses, but that would be an entirely different talk. And while we've talked about it many times at EY. We've never deployed a service that provides is service to other applications via a message bus.
+
+!SLIDE
+### Suppose you are here:
+
+(diagram of a giant system all running inside of one rails app)
+
+!SLIDE
+### You want to go here:
+
+(diagram of a giant system composed of many apps)
+
+!SLIDE
+### Where do you start?
+
 !SLIDE
 ### SSO
 
+.notes this is where it started. THis is where most people start with breaking out their app. Without it you are seriously limited in the types of re-structuring you can do.
+
 !SLIDE
-## what's next
+### CAS, OpenID, OAuth
+
+* rubycas.github.com
+* github.com/openid/ruby-openid
+* oauth.rubyforge.org
+
+.notes we make the mistake of starting with OpenID. Nobody I've ever talked to (working at EngineYard or otherwise) actually understands how OpenID works. The ruby code is all archaic and hard to follow and leads down to C code. You have to store something called a "nonce", which by default is written to disk, which is not good for any app that runs on more than one server (like most of our apps do).  In my experience CAS is the most versatile system, but last I checked the main ruby CAS server is written in Camping, which is pretty foreign and hard to hack with for most rails devs. We're currently running in Oauth. This was a time consuming process. It may seem obvious, but let me spell it out for you.
+
+!SLIDE
+### The SOA Migration
+
+# in 4 steps
+
+!SLIDE
+#### The SOA Migration
+
+# 1. support the old way
+
+!SLIDE
+#### The SOA Migration
+
+# 2. support the new way and the old way at the same time
+
+!SLIDE
+#### The SOA Migration
+
+# 3. upgrade every dependent system
+
+!SLIDE
+#### The SOA Migration
+
+# 4. support only the new way
+(Yay! throw away all that crappy old code from the old way).
+
+!SLIDE
+### Properties of the SOA Migration
+
+!SLIDE
+#### Properties of the SOA Migration
+
+# Easier when you control all servers and all clients
+
+.notes Works a lot better if you control all the systems using your service. (So in the case of SSO, every app is an internal app so we control them all)
+
+!SLIDE
+#### Properties of the SOA Migration
+
+# There will be bugs
+# Be prepared to rollback
+# Use Feature Flags
+
+.notes There will be bugs, so be prepared to rollback.  "support the new way and the old way at the same time" is actually 2 steps. First you do it on the server, then you do it on the client.  And use feature flags so you don't have to deploy to rollback.
+
+!SLIDE
+### What next?
+
+
+!SLIDE
+### dsfsd
 
 what engine yard does
 
