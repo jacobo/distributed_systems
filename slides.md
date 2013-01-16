@@ -4,14 +4,17 @@
 .notes I want to talk to you about what it's like to work at engine yard, and more specifically what it's like to work on borders.  By borders I mean the interactions between systems. And in a way this is inevitable. Even if we tried to consolidate our entire platform into a single monolithic ruby on rails application, we still have to communicate with every one of our customers servers running on ec2, and with our command line tools.  So despite beginning as a monolithic app, our engineers have had to deal with a distributed product form the beginning.  And coming in several years after that, I get the benefit of their mistakes. But, I still have room to make mistakes of my own and learn from them.
 
 !SLIDE
+# TODO: reference my talk from Rails Israel
+
+!SLIDE
 ### About Engine Yard
 
 .notes we run servers on amazon, we coordinate things for you.  We bill our customers (billing system), we support our customers (zendesk integration), we have sales and marketing (salesforce integration).
 
 !SLIDE
-### Practically In Practice
+### Being a developer and Engine Yard
 
-.notes In researching this topic I see lots of talks out there that spend a lot of type justifying SOA, or explaining why you want multiple systems. I am going to gloss over all of that and try to get to what I consider to be the meat of the problem. Which is the part I think is the hard part. The part where you're likely to make mistakes. And maybe I'm wrong, maybe deciding to do SOA in the first place is the hard part.  But nonetheless, let's proceed.
+(and thus, living with Distributed Systems)
 
 !SLIDE
 ### 3 Things
@@ -26,6 +29,8 @@
 * What
 * How
 * Storytime
+
+.notes In researching this topic I see lots of talks out there that spend a lot of type justifying SOA, or explaining why you want multiple systems. I am going to gloss over all of that and try to get to what I consider to be the meat of the problem. Which is the part I think is the hard part. The part where you're likely to make mistakes. And maybe I'm wrong, maybe deciding to do SOA in the first place is the hard part.  But nonetheless, let's proceed.
 
 !SLIDE bigh1
 ### SOA Conventions
@@ -88,6 +93,13 @@
 
 # Storytime
 
+!SLIDE
+#### SOA Conventions
+
+# Dracul, Offshore, and Chronatog
+
+(picture of inquisitive Thom)
+
 .notes Thom. Chronatog, the mapper pattern, and Offshore. It can be hard to understand and possibly not worth the effort when you are trying to publish public services?  Show code examples so the previous explanation becomes more concrete.
 
 !SLIDE
@@ -129,6 +141,12 @@
 * oauth.rubyforge.org
 
 .notes we make the mistake of starting with OpenID. Nobody I've ever talked to (working at EngineYard or otherwise) actually understands how OpenID works. The ruby code is all archaic and hard to follow and leads down to C code. You have to store something called a "nonce", which by default is written to disk, which is not good for any app that runs on more than one server (like most of our apps do).  In my experience CAS is the most versatile system, but last I checked the main ruby CAS server is written in Camping, which is pretty foreign and hard to hack with for most rails devs. We're currently running in Oauth. This was a time consuming process. It may seem obvious, but let me spell it out for you.
+
+!SLIDE
+#### Shipping a Service
+
+# Do it Live
+# Do it Incrementally
 
 !SLIDE bigh1
 #### Shipping a Service
@@ -177,12 +195,28 @@
 
 .notes There will be bugs, so be prepared to rollback.  "support the new way and the old way at the same time" is actually 2 steps. First you do it on the server, then you do it on the client.  And use feature flags so you don't have to deploy to rollback.
 
-!SLIDE
+!SLIDE bigh1
 #### Shipping a Service
 
 # Storytime
 
-.notes smithy migration. The code for do it in fog vs. call out to smithy. (show the code in awsm)
+!SLIDE
+# Smithy
+    @@@ruby
+    def deprovision
+      instrument("firewall.deprovision") do
+        if smithy?
+          provisioned_firewall && provisioned_firewall.destroy
+        else
+          fog.try(:destroy)
+        end
+      end
+    end
+
+!SLIDE
+#### Shipping a Service
+
+# Salesforce IDs
 
 !SLIDE
 ### Design for Resiliency
@@ -200,29 +234,38 @@
 !SLIDE
 #### Design for Resiliency
 
+# Timeout
+
+!SLIDE
+#### Design for Resiliency
+
+# Never assume you can swallow an exception
 # Associate Errors with customers
+# Associate Errors with systems
+
+!SLIDE
+#### Design for Resiliency
+
+# Use New Relic
+# Use Airbrake
+# Make a Metrics Dashboard
+
+!SLIDE
+#### Design for Resiliency
+
+# Avoid side effects, model intent locally
+
+.notes this somewhat goes against the DRY and principle because the foreign system should
 
 !SLIDE
 #### Design for Resiliency
 
 # Cache (using Redis)
 
-!SLIDE
-#### Design for Resiliency
-
-# Model intent locally
-
-.notes this somewhat goes against the DRY and principle because the foreign system should
-
 !SLIDE bigh1
 #### Design for Resiliency
 
 # How
-
-!SLIDE
-#### Design for Resiliency
-
-# Timeouts
 
 !SLIDE
 #### Design for Resiliency
@@ -247,23 +290,28 @@
 !SLIDE
 #### Design for Resiliency
 
-# Model intent locally
+# Model intent locally (code example)
 
-.notes code example of background jobs
+.notes code example of background jobs. awsm NodeProvision. Environment::PROVISION_PROCEDURE
 
 !SLIDE
 #### Design for Resiliency
 
 # Ajax loading
 
-.notes code example of erroneous and/or (new/unreleased) new relic integration
+.notes code example of erroneous and/or (new/unreleased) new relic integration? Live demonstration of services page loading.
 
-!SLIDE
+!SLIDE bigh1
 ### Design for Resiliency
 
 # Storytime
 
-.notes LaBrea problems. (much of which was solved by rack-client + rack-idempotent) weren't being sent to airbrake because of unicorn timeout. Our own timeout wasn't working because it was happening in C blocking network IO on connection to labrea.
+!SLIDE
+### Design for Resiliency
+
+# LaBrea and KeyMaster
+
+.notes LaBrea problems. (much of which was solved by rack-client + rack-idempotent) weren't being sent to airbrake because of unicorn timeout. Our own timeout wasn't working because it was happening in C blocking network IO on connection to labrea. We were swallowing the exceptions because of a unicorn timeout, or because of a blanket (failure to connect to instance) error.  Having new relic would have helped us see that labrea or keymaster was having response time issues.  Needed better error handling. Never assume that it's safe to rescue exceptions from an operation you performed. Don't make service calls as after_save side effects. use a "state" or other local column to keep track of if the service call was made or not.
 
 !SLIDE
 ### Living with Services
@@ -295,6 +343,9 @@
 # Test the client from the server
 
 .notes code example of TF including client tests
+
+!SLIDE
+#### Conclusion?
 
 
 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
