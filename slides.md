@@ -1,10 +1,19 @@
 !SLIDE
+### Jacob Burkhart
+
+!SLIDE
 ### Living with Distributed Systems
+
+<br/><br/><br/><br/>
+
+## `jacobo.github.com/living_with_distributed_systems`
 
 .notes I want to talk to you about what it's like to work at engine yard, and more specifically what it's like to work on borders.  By borders I mean the interactions between systems. And in a way this is inevitable. Even if we tried to consolidate our entire platform into a single monolithic ruby on rails application, we still have to communicate with every one of our customers servers running on ec2, and with our command line tools.  So despite beginning as a monolithic app, our engineers have had to deal with a distributed product form the beginning.  And coming in several years after that, I get the benefit of their mistakes. But, I still have room to make mistakes of my own and learn from them.
 
 !SLIDE
-# TODO: reference my talk from Rails Israel
+## See also: Talks from Rails Israel
+<center><iframe width="560" height="315" src="http://www.youtube.com/embed/jk88Da3jm3c" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="315" src="http://www.youtube.com/embed/-IwihDjVvx4" frameborder="0" allowfullscreen></iframe></center>
 
 !SLIDE
 ### About Engine Yard
@@ -12,61 +21,96 @@
 .notes we run servers on amazon, we coordinate things for you.  We bill our customers (billing system), we support our customers (zendesk integration), we have sales and marketing (salesforce integration).
 
 !SLIDE
-### Being a developer and Engine Yard
+### Being a developer at Engine Yard
 
 (and thus, living with Distributed Systems)
 
 !SLIDE
-### 3 Things
-
-* SOA Conventions
-* Shipping a Service
-* Design for Resiliency
-
-!SLIDE
-### 3 Ways
+### Service-Oriented Architecture
 
 * What
 * How
-* Storytime
 
 .notes In researching this topic I see lots of talks out there that spend a lot of type justifying SOA, or explaining why you want multiple systems. I am going to gloss over all of that and try to get to what I consider to be the meat of the problem. Which is the part I think is the hard part. The part where you're likely to make mistakes. And maybe I'm wrong, maybe deciding to do SOA in the first place is the hard part.  But nonetheless, let's proceed.
 
-!SLIDE bigh1
-### SOA Conventions
+!SLIDE
+### Conventions
 
-# What
+# Assumptions
 
 .notes I'm going to tell you a bunch of assumptions we make at EY about services. These might not be applicable to everyone or even the right set of assumptions for you. But these assumptions frame all of the services we write and will make it easier for me to talk about them. And having these assumptions commons to all services makes it easier for our development team to move between our main app and dependent services whose codebase they may have never looked at before.  So the assumptions are all very basic, but it's important that we have them.
 
 !SLIDE
-#### SOA Conventions
+#### By Convention
 
 # Every piece of knowledge must have a single, unambiguous, authoritative representation within a system
 
 !SLIDE
-#### SOA Conventions
+#### By Convention
 
 # A Server Providing a Service
 
 .notes There's something providing a service (server or provider)
 
 !SLIDE
-#### SOA Conventions
+#### By Convention
 
 # A Client Consuming a Service
 
 .notes There's something consuming a service (client or consumer). This are often many clients consuming a single service. A One-to-Many relationship.
 
-!SLIDE
-#### SOA Conventions
+!SLIDE bullets incremental
+#### By Convention
 
-# The ONLY way to communicate is HTTP
+# The ONLY way to communicate is HTTPS
+
+* No Shared Database
+* No Shared Redis / Memcached
+* No Message Bus
 
 .notes no shared database, no shared disk, no message bus. Nothing against message buses, but that would be an entirely different talk. And while we've talked about it many times at EY. We've never deployed a service that provides is service to other applications via a message bus.
 
+!SLIDE[bg=graffles/01-simple.png]
+#### A Service
+
+!SLIDE[bg=graffles/02-with-apps.png]
+#### Two Apps
+
+!SLIDE[bg=graffles/03-client-more.png]
+#### An API
+
+!SLIDE[bg=graffles/04-two-way-client.png]
+#### Bi-Directional API
+
+!SLIDE[bg=graffles/05-multi-client.png]
+#### Multi-Client API
+
+!SLIDE[bg=graffles/06-simple-mapper.png]
+#### Mapper Pattern
+
+!SLIDE[bg=graffles/07-full-mapper.png]
+#### Mapper Pattern
+
+!SLIDE[bg=graffles/08-web-req.png]
+#### Web Request
+
+!SLIDE[bg=graffles/09-api-tests.png]
+#### API Tests
+
+!SLIDE[bg=graffles/10-app-tests.png]
+#### Client App Tests
+
+!SLIDE[bg=graffles/11-service-tests.png]
+#### Server App Tests
+
+!SLIDE[bg=graffles/12-api.png]
+#### API
+
 !SLIDE
-#### SOA Conventions
+#Assumptions about deployment
+
+!SLIDE
+#### By Convention
 
 # (Client / Server Diagram)
 
