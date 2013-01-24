@@ -32,6 +32,9 @@
 .notes In researching this topic I see lots of talks out there that spend a lot of type justifying SOA, or explaining why you want multiple systems. I am going to gloss over all of that and try to get to what I consider to be the meat of the problem. Which is the part I think is the hard part. The part where you're likely to make mistakes. And maybe I'm wrong, maybe deciding to do SOA in the first place is the hard part.  But nonetheless, let's proceed.
 
 !SLIDE
+### Disclaimer: Reality is Messy
+
+!SLIDE
 ### Conventions
 
 # Assumptions
@@ -70,14 +73,35 @@
 
 .notes no shared database, no shared disk, no message bus. Nothing against message buses, but that would be an entirely different talk. And while we've talked about it many times at EY. We've never deployed a service that provides is service to other applications via a message bus.
 
+!SLIDE
+###HTTPS => Easier Ops
+
 !SLIDE[bg=graffles/01-simple.png]
-#### A Service
+#### As-A-Service
 
 !SLIDE[bg=graffles/02-with-apps.png]
 #### Two Apps
 
 !SLIDE[bg=graffles/03-client-more.png]
 #### An API
+
+!SLIDE
+### Consumers
+
+    @@@ruby
+    class Consumer < ActiveRecord::Base
+
+      validates_presence_of :name
+
+      after_initialize do
+        self.auth_id ||= SecureRandom.hex(8)
+        self.auth_key ||= SecureRandom.hex(40)
+      end
+
+<br/>
+
+    @@@ruby
+    use EY::ApiHMAC::ApiAuth::Server, Consumer
 
 !SLIDE[bg=graffles/04-two-way-client.png]
 #### Bi-Directional API
@@ -86,48 +110,112 @@
 #### Multi-Client API
 
 !SLIDE
-#### Mapper Pattern
+### Mapper Pattern
+
+## It Starts with Confusion
+
+.notes because this is what your co-workers will do
 
 !SLIDE
-Imagine coming into a new project and looking for the place where this API is defined
-You can follow the client code calling this URL, but you can't find it in the App.
+### API Client
+
+<br/>
+
+    @@@ruby
+    module EY
+      class InstanceAPIClient
+
+        def request_snapshot
+          uri = URI.join(base_url, "volumes/all/snapshots")
+          post(uri.to_s, default_headers)
+        end
+
+<br/>
+
+## `volumes/all/snapshots`
 
 !SLIDE
-When you finally trace it down it looks like this:
-(sinatra app)
+### Where's the route?
+
+## `volumes/all/snapshots`
+
+<br/>
+
+    @@@ruby
+    Application.routes.draw do
+
+      match('/instance_api', :to => EY::InstanceAPIServer.app)
+
+<br/>
+
+    @@@ruby
+    map '/instance_api' do
+      run EY::InstanceAPIServer.app
+    end
+
+!SLIDE
+### Sinatra implements the Server
+
+    @@@ruby
+    module EY
+      module InstanceAPIServer
+        module Snapshots
+          class Rackapp < Sinatra::Base
+
+            post "/all/snapshots" do
+              validate!
+              if snapshot = 
+                InstanceAPIServer.mapper.
+                  request_snapshots_for(instance_id)
+              then
+                status 201
+                {}.to_json
+              else
+                not_found
+              end
+            end
+
+!SLIDE
+### Mapper implements the behavior
+
+    @@@ruby
+    InstanceAPIServer.mapper = InstanceAPIMapper
+
+<br/>
+
+    @@@ruby
+    class InstanceAPIMapper
+
+      def self.request_snapshots_for(instance_id)
+        Instance.get!(instance_id).request_snapshots
+        true
+      end
 
 !SLIDE[bg=graffles/06-simple-mapper.png]
 #### Mapper Pattern
 
-!SLIDE
-#### Fakes
-
-!SLIDE
-Imagine you are an addon partner and you want to test your intergration.
-
 !SLIDE[bg=graffles/07-full-mapper.png]
-#### Mapper Pattern
+#### Fake Mapper
 
 !SLIDE
-code examples of the client (rack-client, how to use it)
+### Why are you making me add Sinatra to my Gemfile?
 
 !SLIDE
-code examples of the server (sinatra, how to mount it)
+### Because of the Mock Mode
 
-!SLIDE
-code examples of the "models" at each level
-
-!SLIDE
-rebuttal about coupling / "contract"
+    @@@ruby
+    EY::ServicesAPI.enable_mock!(Rails::Application)
+    @mock_backend = EY::ServicesAPI.mock_backend
+    Capybara.app = @mock_backend.app
 
 !SLIDE[bg=graffles/08-web-req.png]
 #### Web Request
 
-!SLIDE[bg=graffles/09-api-tests.png]
-#### API Tests
-
 !SLIDE[bg=graffles/10-app-tests.png]
 #### Client App Tests
+
+!SLIDE[bg=graffles/09-api-tests.png]
+#### API Tests
 
 !SLIDE[bg=graffles/11-service-tests.png]
 #### Server App Tests
@@ -136,7 +224,70 @@ rebuttal about coupling / "contract"
 #### API
 
 !SLIDE
-#Assumptions about deployment
+### Models
+
+!SLIDE
+### In the Client
+
+    @@@ruby
+    module EY
+      module InstanceAPIClient
+        class Snapshot
+          def initialize(attributes)
+            @attributes = attributes
+          end
+
+          def progress
+            @attributes['progress']
+          end
+
+!SLIDE
+### On the Wire
+    @@@ruby
+    {"snapshot":
+      {
+        "id": 2342342,
+        "state": "in-progress"
+        "progress": 50,
+      }
+    }
+
+!SLIDE
+### In the Server
+
+    @@@ruby
+    snapshot_hash.slice("id", "state", "progress")
+
+<br/><br/>
+
+### In the Mapper
+
+    @@@ruby
+    {
+      "id" => snapshot.id,
+      "state" => snapshot.compute_state
+      "progress": snapshot.progress
+    }
+
+
+!SLIDE
+### In your App
+
+    @@@ruby
+    class Snapshot
+      include Awsm::Resource
+
+      property :id,                   Serial
+      property :mount,                String
+      property :progress,             Integer
+
+!SLIDE
+### You may say that's not DRY!
+
+# Coupling vs. Contract
+
+!SLIDE[bg=graffles/07-full-mapper.png]
+### vs. SOAP / XML-RPC
 
 !SLIDE
 #### Breaking Convention?
@@ -148,35 +299,14 @@ rebuttal about coupling / "contract"
 !SLIDE
 ### Shipping
 
-!SLIDE bigh1
-#### Shipping a Service
-
-# What
-
 !SLIDE
-#### Shipping a Service
-# Suppose you are here:
-
-(diagram of a giant system all running inside of one rails app)
-
-!SLIDE
-#### Shipping a Service
-# You want to go here:
-
-(diagram of a giant system composed of many apps)
-
-!SLIDE
-#### Shipping a Service
-# Where do you start?
-
-!SLIDE
-#### Shipping a Service
+#### Baby's first Service
 # SSO
 
 .notes this is where it started. THis is where most people start with breaking out their app. Without it you are seriously limited in the types of re-structuring you can do.
 
 !SLIDE
-#### Shipping a Service
+#### SSO choices
 # CAS, OpenID, OAuth
 
 * rubycas.github.com
@@ -190,11 +320,6 @@ rebuttal about coupling / "contract"
 
 # Do it Live
 # Do it Incrementally
-
-!SLIDE bigh1
-#### Shipping a Service
-
-# How
 
 !SLIDE
 #### Shipping a Service
@@ -225,90 +350,19 @@ rebuttal about coupling / "contract"
 !SLIDE
 #### Shipping a Service
 
-# Easier when you control all servers and all clients
-
-.notes Works a lot better if you control all the systems using your service. (So in the case of SSO, every app is an internal app so we control them all)
-
-!SLIDE
-#### Shipping a Service
-
 # There will be bugs
 # Be prepared to rollback
 # Use Feature Flags
 
 .notes There will be bugs, so be prepared to rollback.  "support the new way and the old way at the same time" is actually 2 steps. First you do it on the server, then you do it on the client.  And use feature flags so you don't have to deploy to rollback.
 
-!SLIDE bigh1
-#### Shipping a Service
-
-# Storytime
-
-!SLIDE
-# Smithy
-    @@@ruby
-    def deprovision
-      instrument("firewall.deprovision") do
-        if smithy?
-          provisioned_firewall && provisioned_firewall.destroy
-        else
-          fog.try(:destroy)
-        end
-      end
-    end
-
-!SLIDE
-#### Shipping a Service
-
-# Salesforce IDs
-
 !SLIDE
 ### Design for Resiliency
-
-!SLIDE bigh1
-#### Design for Resiliency
-
-# What
 
 !SLIDE
 #### Design for Resiliency
 
 # Retry 500s
-
-!SLIDE
-#### Design for Resiliency
-
-# Timeout
-
-!SLIDE
-#### Design for Resiliency
-
-# Never assume you can swallow an exception
-# Associate Errors with customers
-# Associate Errors with systems
-
-!SLIDE
-#### Design for Resiliency
-
-# Use New Relic
-# Use Airbrake
-# Make a Metrics Dashboard
-
-!SLIDE
-#### Design for Resiliency
-
-# Avoid side effects, model intent locally
-
-.notes this somewhat goes against the DRY and principle because the foreign system should
-
-!SLIDE
-#### Design for Resiliency
-
-# Cache (using Redis)
-
-!SLIDE bigh1
-#### Design for Resiliency
-
-# How
 
 !SLIDE
 #### Design for Resiliency
@@ -319,23 +373,19 @@ rebuttal about coupling / "contract"
 !SLIDE
 #### Design for Resiliency
 
-# Addons Redis caching code example
-
-.notes the list of services we respond with on deploys is essentially cached forever. (invalidated by viewing)
+# Timeout
 
 !SLIDE
 #### Design for Resiliency
 
-# SSO Redis caching code example
+# Avoid side effects, model intent locally
 
-.notes we always pull data from the cache, but check if the cache is "old" to refresh it in the background
+.notes LaBrea problems. (much of which was solved by rack-client + rack-idempotent) weren't being sent to airbrake because of unicorn timeout. Our own timeout wasn't working because it was happening in C blocking network IO on connection to labrea. We were swallowing the exceptions because of a unicorn timeout, or because of a blanket (failure to connect to instance) error.  Having new relic would have helped us see that labrea or keymaster was having response time issues.  Needed better error handling. Never assume that it's safe to rescue exceptions from an operation you performed. Don't make service calls as after_save side effects. use a "state" or other local column to keep track of if the service call was made or not.
 
 !SLIDE
 #### Design for Resiliency
 
-# Model intent locally (code example)
-
-.notes code example of background jobs. awsm NodeProvision. Environment::PROVISION_PROCEDURE
+# Cache (using Redis)
 
 !SLIDE
 #### Design for Resiliency
@@ -344,18 +394,6 @@ rebuttal about coupling / "contract"
 
 .notes code example of erroneous and/or (new/unreleased) new relic integration? Live demonstration of services page loading.
 
-!SLIDE bigh1
-### Design for Resiliency
-
-# Storytime
-
-!SLIDE
-### Design for Resiliency
-
-# LaBrea and KeyMaster
-
-.notes LaBrea problems. (much of which was solved by rack-client + rack-idempotent) weren't being sent to airbrake because of unicorn timeout. Our own timeout wasn't working because it was happening in C blocking network IO on connection to labrea. We were swallowing the exceptions because of a unicorn timeout, or because of a blanket (failure to connect to instance) error.  Having new relic would have helped us see that labrea or keymaster was having response time issues.  Needed better error handling. Never assume that it's safe to rescue exceptions from an operation you performed. Don't make service calls as after_save side effects. use a "state" or other local column to keep track of if the service call was made or not.
-
 !SLIDE
 ### Living with Services
 
@@ -363,6 +401,10 @@ rebuttal about coupling / "contract"
 #### Living with Services
 
 # Continuous Integration
+* Build all Apps
+* Build all Branches
+* Build all Gems
+* Standardize Release and Deploy
 
 .notes examples of ensemble: build, deploy, release
 
@@ -376,91 +418,32 @@ rebuttal about coupling / "contract"
 !SLIDE
 #### Living with Services
 
-# Test the server from the client
-
-.notes code example of addons client running in alternate modes
-
-!SLIDE
-#### Living with Services
-
-# Test the client from the server
-
-.notes code example of TF including client tests
+* Test the server from the client
+* Test the client from the server
+* Use the client in your server tests
 
 !SLIDE
-#### Conclusion?
+### Bi-Directional Testing
 
+    @@@ruby
+    RSpec::Core::RakeTask.new(:internal_api_gem) do |t|
+      require "ey_services_api_internal/external_test_helper"
+      t.pattern = EY::ServicesAPI::Internal::
+                  ExternalTestHelper.rspec_pattern
+      t.fail_on_error = true
+    end
 
-<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+    RSpec::Core::RakeTask.new(:public_api_gem) do |t|
+      require "ey_services_api/external_test_helper"
+      t.pattern = EY::ServicesAPI::
+                  ExternalTestHelper.rspec_pattern
+      t.fail_on_error = true
+    end
 
-what engine yard does
+    task :spec => ['spec:rails', 'spec:internal_api_gem', 
+                   'spec:public_api_gem']
 
-The big picture
-  view of engine yard and all of it's systems
-
-The ideal
-  Swap out anything with a different version
-  Downtime of anything should only limit customer's ability to perform the limited task of that one thing
-
-The hassles:
-  every new project needs:
-    sso, new relic, resque (or something like it), airbrake
-    people need to know:
-      what it does
-      how to access it
-      how to fix it
-      how to setup it dev mode
-      hot to run tests, and contribute
-        (Example of failure here: tresfiestas many-repo nightmare)
-          attempted to fix with j-cash client is in the same repo as the server
-
-Figuring out the incremental deploy
-  This app introduces and API, which this other app needs, so bump this gem first, then deploy this, then release that, etc..
-
-Problem of the rails security hole... go upgrade all the rails version
-  But we WERE able to do 6 apps in just 1 day
-
-Case study LaBrea
-  we use the production version of LaBrea with every staging cloud
-  we can almost use production version of tresfiestas with each staging cloud
-  wish we could use production smithy from dev environment
-
-The developer workflow
-  each app has it's own environment
-  each app has a model (usually called consumer), which represents other apps that want to talk to it
-    show SSO admin consumers list?
-
-testing methodologies
-  running the tests of the client when the server build in CI
-  (and still running the test of the client)
-  mock modes, and full featured mocks
-  mapper pattern
-    (ey_instance_api example?)
-
-rack tools
-  rack-idempotent
-    retry 500s and 503s, timeout before the request timeout!
-  rack-client
-    backend swapping in tests
-    running multiple apps in the same rack container
-
-Caching strategies
-  on the server
-  on the client
-
-the migration
-  story of moving to using smithy from awsm
-
-The problem of users changing their e-mails
-  attempts to fix out of frustration:
-    a table for every API update request and row for each attempt (with success/failure)
-
-A CI Server
-  important to be able to get every new project into CI immediately, build every branch
-  standardizes the deploy and release process
-  (And of course we have a standardized hosting process)
-
+!SLIDE
+### Questions?
 
 
