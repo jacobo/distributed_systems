@@ -85,8 +85,25 @@
 !SLIDE[bg=graffles/05-multi-client.png]
 #### Multi-Client API
 
+!SLIDE
+#### Mapper Pattern
+
+!SLIDE
+Imagine coming into a new project and looking for the place where this API is defined
+You can follow the client code calling this URL, but you can't find it in the App.
+
+!SLIDE
+When you finally trace it down it looks like this:
+(sinatra app)
+
 !SLIDE[bg=graffles/06-simple-mapper.png]
 #### Mapper Pattern
+
+!SLIDE
+#### Fakes
+
+!SLIDE
+Imagine you are an addon partner and you want to test your intergration.
 
 !SLIDE[bg=graffles/07-full-mapper.png]
 #### Mapper Pattern
