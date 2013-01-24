@@ -6,7 +6,7 @@
 
 <br/><br/><br/><br/>
 
-## `jacobo.github.com/living_with_distributed_systems`
+## `jacobo.github.com/distributed_systems`
 
 .notes I want to talk to you about what it's like to work at engine yard, and more specifically what it's like to work on borders.  By borders I mean the interactions between systems. And in a way this is inevitable. Even if we tried to consolidate our entire platform into a single monolithic ruby on rails application, we still have to communicate with every one of our customers servers running on ec2, and with our command line tools.  So despite beginning as a monolithic app, our engineers have had to deal with a distributed product form the beginning.  And coming in several years after that, I get the benefit of their mistakes. But, I still have room to make mistakes of my own and learn from them.
 
@@ -15,15 +15,13 @@
 <center><iframe width="560" height="315" src="http://www.youtube.com/embed/jk88Da3jm3c" frameborder="0" allowfullscreen></iframe>
 <iframe width="560" height="315" src="http://www.youtube.com/embed/-IwihDjVvx4" frameborder="0" allowfullscreen></iframe></center>
 
-!SLIDE
-### About Engine Yard
+!SLIDE[bg=pictures/engineyard.png]
+# &nbsp;&nbsp;&nbsp; Engine Yard
 
 .notes we run servers on amazon, we coordinate things for you.  We bill our customers (billing system), we support our customers (zendesk integration), we have sales and marketing (salesforce integration).
 
-!SLIDE
-### Being a developer at Engine Yard
-
-(and thus, living with Distributed Systems)
+!SLIDE[bg=graffles/ey-soa.png]
+# &nbsp;
 
 !SLIDE
 ### Service-Oriented Architecture
@@ -38,10 +36,12 @@
 
 # Assumptions
 
+# What
+
 .notes I'm going to tell you a bunch of assumptions we make at EY about services. These might not be applicable to everyone or even the right set of assumptions for you. But these assumptions frame all of the services we write and will make it easier for me to talk about them. And having these assumptions commons to all services makes it easier for our development team to move between our main app and dependent services whose codebase they may have never looked at before.  So the assumptions are all very basic, but it's important that we have them.
 
 !SLIDE
-#### By Convention
+#### DRY
 
 # Every piece of knowledge must have a single, unambiguous, authoritative representation within a system
 
@@ -91,6 +91,18 @@
 !SLIDE[bg=graffles/07-full-mapper.png]
 #### Mapper Pattern
 
+!SLIDE
+code examples of the client (rack-client, how to use it)
+
+!SLIDE
+code examples of the server (sinatra, how to mount it)
+
+!SLIDE
+code examples of the "models" at each level
+
+!SLIDE
+rebuttal about coupling / "contract"
+
 !SLIDE[bg=graffles/08-web-req.png]
 #### Web Request
 
@@ -110,44 +122,14 @@
 #Assumptions about deployment
 
 !SLIDE
-#### By Convention
-
-# (Client / Server Diagram)
-
-(whiteboard it)
-
-.notes client app, uses a client, talks to the server API, hosted inside the server, which talks to a database. Use example of public facing app, talks to billing app, to get your billing address. Goal of being able to use your production version of X with your staging version of Y.
-
-!SLIDE bigh1
-#### SOA Conventions
-
-# How
-
-!SLIDE
-#### SOA Conventions
-
-# (Mapper Pattern Diagram)
-
-(whiteboard it)
-
-.notes drawing borders in the "diagram" adding fakes and tests. no code.
-
-!SLIDE bigh1
-#### SOA Conventions
-
-# Storytime
-
-!SLIDE
-#### SOA Conventions
-
-# Dracul, Offshore, and Chronatog
+#### Breaking Convention?
 
 (picture of inquisitive Thom)
 
 .notes Thom. Chronatog, the mapper pattern, and Offshore. It can be hard to understand and possibly not worth the effort when you are trying to publish public services?  Show code examples so the previous explanation becomes more concrete.
 
 !SLIDE
-### Shipping a Service
+### Shipping
 
 !SLIDE bigh1
 #### Shipping a Service
