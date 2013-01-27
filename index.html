@@ -1,0 +1,651 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>Presentation</title>
+
+  <meta name="viewport" content="width=device-width"/>
+
+  <link rel="stylesheet" href="./css/reset.css" type="text/css"/>
+  <link rel="stylesheet" href="./css/showoff.css" type="text/css"/>
+
+  <link type="text/css" href="./css/fg.menu.css" media="screen" rel="stylesheet" />
+  <link type="text/css" href="./css/theme/ui.all.css" media="screen" rel="stylesheet" />
+  <link type="text/css" href="./css/sh_style.css" rel="stylesheet" />
+
+  <script type="text/javascript" src="./js/jquery-1.4.2.min.js"></script>
+  <script type="text/javascript" src="./js/jquery.cycle.all.js"></script>
+	<script type="text/javascript" src="./js/jquery-print.js"></script>
+  <script type="text/javascript" src="./js/jquery.batchImageLoad.js"></script>
+
+  <script type="text/javascript" src="./js/jquery.doubletap-0.1.js"></script>
+
+  <script type="text/javascript" src="./js/fg.menu.js"></script>
+  <script type="text/javascript" src="./js/showoff.js"></script>
+  <script type="text/javascript" src="./js/jTypeWriter.js"> </script>
+  <script type="text/javascript" src="./js/sh_main.min.js"></script>
+  <script type="text/javascript" src="./js/core.js"></script>
+  <script type="text/javascript" src="./js/showoffcore.js"></script>
+  <script type="text/javascript" src="./js/coffee-script.js"></script>
+
+  
+    
+      <script type="text/javascript" src="./js/sh_lang/sh_ruby.min.js"></script>
+    
+  
+
+  
+    <link rel="stylesheet" href="./file/000_sh_vim-dark.css" type="text/css"/>
+  
+    <link rel="stylesheet" href="./file/styles.css" type="text/css"/>
+  
+
+  
+
+  <script type="text/javascript">
+  $(function(){
+      setupPreso(false, './');
+  });
+  </script>
+
+</head>
+
+<body>
+
+<a tabindex="0" href="#search-engines" class="fg-button fg-button-icon-right ui-widget ui-state-default ui-corner-all" id="navmenu"><span class="ui-icon ui-icon-triangle-1-s"></span>slides</a>
+<div id="navigation" class="hidden"></div>
+
+<div id="help">
+  <table>
+    <tr><td class="key">z, ?</td><td>toggle help (this)</td></tr>
+    <tr><td class="key">space, &rarr;</td><td>next slide</td></tr>
+    <tr><td class="key">shift-space, &larr;</td><td>previous slide</td></tr>
+    <tr><td class="key">d</td><td>toggle debug mode</td></tr>
+    <tr><td class="key">## &lt;ret&gt;</td><td>go to slide #</td></tr>
+    <tr><td class="key">c, t</td><td>table of contents (vi)</td></tr>
+    <tr><td class="key">f</td><td>toggle footer</td></tr>
+    <tr><td class="key">r</td><td>reload slides</td></tr>
+    <tr><td class="key">n</td><td>toggle notes</td></tr>
+    <tr><td class="key">p</td><td>run preshow</td></tr>
+    <tr><td class="key">P</td><td>toggle pause</td></tr>
+  </table>
+</div>
+
+<div class="buttonNav">
+  <input type="submit" onClick="prevStep();" value="prev"/>
+  <input type="submit" onClick="nextStep();" value="next"/>
+</div>
+
+<div id="preso">loading presentation...</div>
+<div id="footer">
+  <span id="slideInfo"></span>
+  <span id="debugInfo"></span>
+  <span id="notesInfo"></span>
+</div>
+
+<div id="slides" class="offscreen" style="display:none;">
+<html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/1">
+<h3>Jacob Burkhart</h3>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/2">
+<h3>Living with Distributed Systems</h3>
+
+<p><br><br><br><br></p>
+
+<h2><code>jacobo.github.com/distributed_systems</code></h2>
+
+<p class="notes">I want to talk to you about what it's like to work at engine yard, and more specifically what it's like to work on borders.  By borders I mean the interactions between systems. And in a way this is inevitable. Even if we tried to consolidate our entire platform into a single monolithic ruby on rails application, we still have to communicate with every one of our customers servers running on ec2, and with our command line tools.  So despite beginning as a monolithic app, our engineers have had to deal with a distributed product form the beginning.  And coming in several years after that, I get the benefit of their mistakes. But, I still have room to make mistakes of my own and learn from them.</p>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/3">
+<h2>See also: Talks from Rails Israel</h2>
+
+<p></p>
+<center>
+<iframe width="560" height="315" src="http://www.youtube.com/embed/jk88Da3jm3c" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="315" src="http://www.youtube.com/embed/-IwihDjVvx4" frameborder="0" allowfullscreen></iframe>
+</center>
+</div>
+</div></body></html><html><body><div style="background: url('file/./pictures/engineyard.png') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/4">
+<h1>&#160;&#160;&#160; Engine Yard</h1>
+
+<p class="notes">we run servers on amazon, we coordinate things for you.  We bill our customers (billing system), we support our customers (zendesk integration), we have sales and marketing (salesforce integration).</p>
+</div>
+</div></body></html><html><body><div style="background: url('file/./graffles/ey-soa.png') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/5">
+<h1>&#160;</h1>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/6">
+<h3>Service-Oriented Architecture</h3>
+
+<ul>
+<li>What</li>
+<li>How</li>
+</ul>
+<p class="notes">In researching this topic I see lots of talks out there that spend a lot of type justifying SOA, or explaining why you want multiple systems. I am going to gloss over all of that and try to get to what I consider to be the meat of the problem. Which is the part I think is the hard part. The part where you're likely to make mistakes. And maybe I'm wrong, maybe deciding to do SOA in the first place is the hard part.  But nonetheless, let's proceed.</p>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/7">
+<h3>Disclaimer: Reality is Messy</h3>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/8">
+<h3>Conventions</h3>
+
+<h1>Assumptions</h1>
+
+<h1>What</h1>
+
+<p class="notes">I'm going to tell you a bunch of assumptions we make at EY about services. These might not be applicable to everyone or even the right set of assumptions for you. But these assumptions frame all of the services we write and will make it easier for me to talk about them. And having these assumptions commons to all services makes it easier for our development team to move between our main app and dependent services whose codebase they may have never looked at before.  So the assumptions are all very basic, but it's important that we have them.</p>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/9">
+<h4>DRY</h4>
+
+<h1>Every piece of knowledge must have a single, unambiguous, authoritative representation within a system</h1>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/10">
+<h4>By Convention</h4>
+
+<h1>A Server Providing a Service</h1>
+
+<p class="notes">There's something providing a service (server or provider)</p>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/11">
+<h4>By Convention</h4>
+
+<h1>A Client Consuming a Service</h1>
+
+<p class="notes">There's something consuming a service (client or consumer). This are often many clients consuming a single service. A One-to-Many relationship.</p>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content bullets incremental" ref="./slides/12">
+<h4>By Convention</h4>
+
+<h1>The ONLY way to communicate is HTTPS</h1>
+
+<ul>
+<li>No Shared Database</li>
+<li>No Shared Redis / Memcached</li>
+<li>No Message Bus</li>
+</ul>
+<p class="notes">no shared database, no shared disk, no message bus. Nothing against message buses, but that would be an entirely different talk. And while we've talked about it many times at EY. We've never deployed a service that provides is service to other applications via a message bus.</p>
+</div>
+</div></body></html><html><body><div style="background: url('file/./pictures/one-env.png') center no-repeat;" class="slide" data-transition="none">
+<div class="content leftbanner" ref="./slides/13">
+<h3>Easy Ops</h3>
+</div>
+</div></body></html><html><body><div style="background: url('file/./graffles/01-simple.png') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/14">
+<h4>As-A-Service</h4>
+</div>
+</div></body></html><html><body><div style="background: url('file/./graffles/02-with-apps.png') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/15">
+<h4>Two Apps</h4>
+</div>
+</div></body></html><html><body><div style="background: url('file/./graffles/03-client-more.png') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/16">
+<h4>An API</h4>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/17">
+<h3>Consumers</h3>
+
+<pre class="sh_ruby"><code>class Consumer &lt; ActiveRecord::Base
+
+  validates_presence_of :name
+
+  after_initialize do
+    self.auth_id ||= SecureRandom.hex(8)
+    self.auth_key ||= SecureRandom.hex(40)
+  end</code></pre>
+
+<p><br></p>
+
+<pre class="sh_ruby"><code>use EY::ApiHMAC::ApiAuth::Server, Consumer</code></pre>
+</div>
+</div></body></html><html><body><div style="background: url('file/./graffles/04-two-way-client.png') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/18">
+<h4>Bi-Directional API</h4>
+</div>
+</div></body></html><html><body><div style="background: url('file/./graffles/05-multi-client.png') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/19">
+<h4>Multi-Client API</h4>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/20">
+<h3>Mapper Pattern</h3>
+
+<h2>It Starts with Confusion</h2>
+
+<p class="notes">because this is what your co-workers will do</p>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/21">
+<h3>API Client</h3>
+
+<p><br></p>
+
+<pre class="sh_ruby"><code>module EY
+  class InstanceAPIClient
+
+    def request_snapshot
+      uri = URI.join(base_url, "volumes/all/snapshots")
+      post(uri.to_s, default_headers)
+    end</code></pre>
+
+<p><br></p>
+
+<h2><code>volumes/all/snapshots</code></h2>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/22">
+<h3>Where's the route?</h3>
+
+<h2><code>volumes/all/snapshots</code></h2>
+
+<p><br></p>
+
+<pre class="sh_ruby"><code>Application.routes.draw do
+
+  match('/instance_api', :to =&gt; EY::InstanceAPIServer.app)</code></pre>
+
+<p><br></p>
+
+<pre class="sh_ruby"><code>map '/instance_api' do
+  run EY::InstanceAPIServer.app
+end</code></pre>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/23">
+<h3>Sinatra implements the Server</h3>
+
+<pre class="sh_ruby"><code>module EY::InstanceAPIServer::Snapshots
+  class Rackapp &lt; Sinatra::Base
+
+    post "/all/snapshots" do
+      validate!
+      if snapshot =
+        InstanceAPIServer.mapper.
+          request_snapshots_for(instance_id)
+      then
+        status 201
+        {}.to_json
+      else
+        not_found
+      end
+    end</code></pre>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/24">
+<h3>Mapper implements the behavior</h3>
+
+<pre class="sh_ruby"><code>InstanceAPIServer.mapper = InstanceAPIMapper</code></pre>
+
+<p><br></p>
+
+<pre class="sh_ruby"><code>class InstanceAPIMapper
+
+  def self.request_snapshots_for(instance_id)
+    Instance.get!(instance_id).request_snapshots
+    true
+  end</code></pre>
+</div>
+</div></body></html><html><body><div style="background: url('file/./graffles/06-simple-mapper.png') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/25">
+<h4>Mapper Pattern</h4>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content smallcode" ref="./slides/26">
+<pre class="sh_ruby"><code>module IntegrationMapper
+
+  def self.save_api_creds(auth_id, auth_key)
+    creds = EyCredentials.first || EyCredentials.create!
+    creds.update_attributes!(:auth_id =&gt; auth_id, :auth_key =&gt; auth_key)
+  end
+
+  def self.api_creds
+    creds = EyCredentials.first || EyCredentials.create!
+    {:auth_id =&gt; creds.auth_id, :auth_key =&gt; creds.auth_key}
+  end
+
+  def self.service_account_create(service_account)
+    customer = Customer.create!(:name                   =&gt; service_account.name,
+                                :tf_service_account_url =&gt; service_account.url,
+                                :tf_messages_url        =&gt; service_account.messages_url)
+    {:id =&gt; customer.id}
+  end
+
+  def self.service_account_cancel(customer_id)
+    Customer.find(customer_id).destroy
+  end
+
+  def self.provisioned_service_create(customer_id, provisioned_service)
+    customer = Customer.find(customer_id)
+    deployment = customer.deployments.create!(
+      :name                       =&gt; "#{provisioned_service.app.name} / #{provisioned_service.environment.name}",
+      :tf_provisioned_service_url =&gt; provisioned_service.url,
+      :tf_messages_url            =&gt; provisioned_service.messages_url,
+    )
+    {:id =&gt; deployment.id, :configuration_url =&gt; sso_deployment_path(deployment), :vars =&gt; {}}
+  end
+
+  def self.provisioned_service_cancel(customer_id, deployment_id)
+    customer = Customer.find(customer_id)
+    deployment = customer.deployments.find(deployment_id)
+    deployment.destroy
+  end</code></pre>
+
+<p class="notes">In practice, a mapper is...</p>
+</div>
+</div></body></html><html><body><div style="background: url('file/./graffles/07-full-mapper.png') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/27">
+<h4>Fake Mapper</h4>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/28">
+<h3>Why are you making me add Sinatra to my Gemfile?</h3>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/29">
+<h3>Because of the Mock Mode</h3>
+
+<pre class="sh_ruby"><code>EY::ServicesAPI.enable_mock!(Rails::Application)
+@mock_backend = EY::ServicesAPI.mock_backend
+Capybara.app = @mock_backend.app</code></pre>
+</div>
+</div></body></html><html><body><div style="background: url('file/./graffles/08-web-req.png') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/30">
+<h4>Web Request</h4>
+</div>
+</div></body></html><html><body><div style="background: url('file/./graffles/10-app-tests.png') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/31">
+<h4>Client App Tests</h4>
+</div>
+</div></body></html><html><body><div style="background: url('file/./graffles/09-api-tests.png') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/32">
+<h4>API Tests</h4>
+</div>
+</div></body></html><html><body><div style="background: url('file/./graffles/11-service-tests.png') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/33">
+<h4>Server App Tests</h4>
+</div>
+</div></body></html><html><body><div style="background: url('file/./graffles/12-api.png') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/34">
+<h4>API</h4>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/35">
+<h3>Models</h3>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/36">
+<h3>In the Client</h3>
+
+<pre class="sh_ruby"><code>module EY
+  module InstanceAPIClient
+    class Snapshot
+      def initialize(attributes)
+        @attributes = attributes
+      end
+
+      def progress
+        @attributes['progress']
+      end</code></pre>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/37">
+<h3>On the Wire</h3>
+
+<pre class="sh_ruby"><code>{"snapshot":
+  {
+    "id": 2342342,
+    "state": "in-progress"
+    "progress": 50,
+  }
+}</code></pre>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/38">
+<h3>In the Server</h3>
+
+<pre class="sh_ruby"><code>snapshot_hash.slice("id", "state", "progress")</code></pre>
+
+<p><br><br></p>
+
+<h3>In the Mapper</h3>
+
+<pre class="sh_ruby"><code>{
+  "id" =&gt; snapshot.id,
+  "state" =&gt; snapshot.compute_state
+  "progress": snapshot.progress
+}</code></pre>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/39">
+<h3>In your App</h3>
+
+<pre class="sh_ruby"><code>class Snapshot
+  include Awsm::Resource
+
+  property :id,                   Serial
+  property :mount,                String
+  property :progress,             Integer</code></pre>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/40">
+<h3>You may say that's not DRY!</h3>
+
+<h1>Coupling vs. Contract</h1>
+</div>
+</div></body></html><html><body><div style="background: url('file/./graffles/07-full-mapper.png') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/41">
+<h3>vs. SOAP / XML-RPC</h3>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/42">
+<h4>Breaking Convention?</h4>
+
+<p>(picture of inquisitive Thom)</p>
+
+<p class="notes">Thom. Chronatog, the mapper pattern, and Offshore. It can be hard to understand and possibly not worth the effort when you are trying to publish public services?  Show code examples so the previous explanation becomes more concrete.</p>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/43">
+<h3>Shipping</h3>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/44">
+<h4>Baby's first Service</h4>
+
+<h1>SSO</h1>
+
+<p class="notes">this is where it started. THis is where most people start with breaking out their app. Without it you are seriously limited in the types of re-structuring you can do.</p>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/45">
+<h4>SSO choices</h4>
+
+<h1>CAS, OpenID, OAuth</h1>
+
+<ul>
+<li>rubycas.github.com</li>
+<li>github.com/openid/ruby-openid</li>
+<li>oauth.rubyforge.org</li>
+</ul>
+<p class="notes">we make the mistake of starting with OpenID. Nobody I've ever talked to (working at EngineYard or otherwise) actually understands how OpenID works. The ruby code is all archaic and hard to follow and leads down to C code. You have to store something called a "nonce", which by default is written to disk, which is not good for any app that runs on more than one server (like most of our apps do).  In my experience CAS is the most versatile system, but last I checked the main ruby CAS server is written in Camping, which is pretty foreign and hard to hack with for most rails devs. We're currently running in Oauth. This was a time consuming process. It may seem obvious, but let me spell it out for you.</p>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/46">
+<h4>Shipping a Service</h4>
+
+<h1>Do it Live</h1>
+
+<h1>Do it Incrementally</h1>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/47">
+<h4>Shipping a Service</h4>
+
+<h1>4 step migration</h1>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/48">
+<h4>Shipping a Service</h4>
+
+<h1>1. support the old way</h1>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/49">
+<h4>Shipping a Service</h4>
+
+<h1>2. support the new way and the old way at the same time</h1>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/50">
+<h4>Shipping a Service</h4>
+
+<h1>3. upgrade every dependent system</h1>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/51">
+<h4>Shipping a Service</h4>
+
+<h1>4. support only the new way</h1>
+
+<p>(Yay! throw away all that crappy old code from the old way).</p>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/52">
+<h4>Shipping a Service</h4>
+
+<h1>There will be bugs</h1>
+
+<h1>Be prepared to rollback</h1>
+
+<h1>Use Feature Flags</h1>
+
+<p class="notes">There will be bugs, so be prepared to rollback.  "support the new way and the old way at the same time" is actually 2 steps. First you do it on the server, then you do it on the client.  And use feature flags so you don't have to deploy to rollback.</p>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/53">
+<h3>Design for Resiliency</h3>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/54">
+<h4>Design for Resiliency</h4>
+
+<h1>Retry 500s</h1>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/55">
+<h4>Design for Resiliency</h4>
+
+<h1>Rack-Client</h1>
+
+<h1>Rack-Idempotent</h1>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/56">
+<h4>Design for Resiliency</h4>
+
+<h1>Timeout</h1>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/57">
+<h4>Design for Resiliency</h4>
+
+<h1>Avoid side effects, model intent locally</h1>
+
+<p class="notes">LaBrea problems. (much of which was solved by rack-client + rack-idempotent) weren't being sent to airbrake because of unicorn timeout. Our own timeout wasn't working because it was happening in C blocking network IO on connection to labrea. We were swallowing the exceptions because of a unicorn timeout, or because of a blanket (failure to connect to instance) error.  Having new relic would have helped us see that labrea or keymaster was having response time issues.  Needed better error handling. Never assume that it's safe to rescue exceptions from an operation you performed. Don't make service calls as after_save side effects. use a "state" or other local column to keep track of if the service call was made or not.</p>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/58">
+<h4>Design for Resiliency</h4>
+
+<h1>Cache (using Redis)</h1>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/59">
+<h4>Design for Resiliency</h4>
+
+<h1>Ajax loading</h1>
+
+<p class="notes">code example of erroneous and/or (new/unreleased) new relic integration? Live demonstration of services page loading.</p>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/60">
+<h3>Living with Services</h3>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/61">
+<h4>Living with Services</h4>
+
+<h1>Continuous Integration</h1>
+
+<ul>
+<li>Build all Apps</li>
+<li>Build all Branches</li>
+<li>Build all Gems</li>
+<li>Standardize Release and Deploy</li>
+</ul>
+<p class="notes">examples of ensemble: build, deploy, release</p>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/62">
+<h4>Living with Services</h4>
+
+<h1>The bump release repeat dance</h1>
+
+<p class="notes">code example of Gemfile hackery?</p>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/63">
+<h4>Living with Services</h4>
+
+<ul>
+<li>Test the server from the client</li>
+<li>Test the client from the server</li>
+<li>Use the client in your server tests</li>
+</ul>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/64">
+<h3>Bi-Directional Testing</h3>
+
+<pre class="sh_ruby"><code>RSpec::Core::RakeTask.new(:internal_api_gem) do |t|
+  require "ey_services_api_internal/external_test_helper"
+  t.pattern = EY::ServicesAPI::Internal::
+              ExternalTestHelper.rspec_pattern
+  t.fail_on_error = true
+end
+
+RSpec::Core::RakeTask.new(:public_api_gem) do |t|
+  require "ey_services_api/external_test_helper"
+  t.pattern = EY::ServicesAPI::
+              ExternalTestHelper.rspec_pattern
+  t.fail_on_error = true
+end
+
+task :spec =&gt; ['spec:rails', 'spec:internal_api_gem', 
+               'spec:public_api_gem']</code></pre>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/65">
+<h3>Questions?</h3>
+</div>
+</div></body></html></div>
+<div id="pauseScreen">
+  
+</div>
+
+</body>
+</html>
