@@ -73,8 +73,8 @@
 
 .notes no shared database, no shared disk, no message bus. Nothing against message buses, but that would be an entirely different talk. And while we've talked about it many times at EY. We've never deployed a service that provides is service to other applications via a message bus.
 
-!SLIDE
-###HTTPS => Easier Ops
+!SLIDE[bg=pictures/one-env.png] leftbanner
+###Easy Ops
 
 !SLIDE[bg=graffles/01-simple.png]
 #### As-A-Service
@@ -157,23 +157,21 @@
 ### Sinatra implements the Server
 
     @@@ruby
-    module EY
-      module InstanceAPIServer
-        module Snapshots
-          class Rackapp < Sinatra::Base
+    module EY::InstanceAPIServer::Snapshots
+      class Rackapp < Sinatra::Base
 
-            post "/all/snapshots" do
-              validate!
-              if snapshot = 
-                InstanceAPIServer.mapper.
-                  request_snapshots_for(instance_id)
-              then
-                status 201
-                {}.to_json
-              else
-                not_found
-              end
-            end
+        post "/all/snapshots" do
+          validate!
+          if snapshot =
+            InstanceAPIServer.mapper.
+              request_snapshots_for(instance_id)
+          then
+            status 201
+            {}.to_json
+          else
+            not_found
+          end
+        end
 
 !SLIDE
 ### Mapper implements the behavior
@@ -193,6 +191,50 @@
 
 !SLIDE[bg=graffles/06-simple-mapper.png]
 #### Mapper Pattern
+
+!SLIDE smallcode
+
+    @@@ruby
+    module IntegrationMapper
+
+      def self.save_api_creds(auth_id, auth_key)
+        creds = EyCredentials.first || EyCredentials.create!
+        creds.update_attributes!(:auth_id => auth_id, :auth_key => auth_key)
+      end
+
+      def self.api_creds
+        creds = EyCredentials.first || EyCredentials.create!
+        {:auth_id => creds.auth_id, :auth_key => creds.auth_key}
+      end
+
+      def self.service_account_create(service_account)
+        customer = Customer.create!(:name                   => service_account.name,
+                                    :tf_service_account_url => service_account.url,
+                                    :tf_messages_url        => service_account.messages_url)
+        {:id => customer.id}
+      end
+
+      def self.service_account_cancel(customer_id)
+        Customer.find(customer_id).destroy
+      end
+
+      def self.provisioned_service_create(customer_id, provisioned_service)
+        customer = Customer.find(customer_id)
+        deployment = customer.deployments.create!(
+          :name                       => "#{provisioned_service.app.name} / #{provisioned_service.environment.name}",
+          :tf_provisioned_service_url => provisioned_service.url,
+          :tf_messages_url            => provisioned_service.messages_url,
+        )
+        {:id => deployment.id, :configuration_url => sso_deployment_path(deployment), :vars => {}}
+      end
+
+      def self.provisioned_service_cancel(customer_id, deployment_id)
+        customer = Customer.find(customer_id)
+        deployment = customer.deployments.find(deployment_id)
+        deployment.destroy
+      end
+
+.notes In practice, a mapper is...
 
 !SLIDE[bg=graffles/07-full-mapper.png]
 #### Fake Mapper

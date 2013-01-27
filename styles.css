@@ -189,7 +189,9 @@ table {
 table td {
   padding: 12px;
 }
-
+.smallcode pre {
+  font-size: 15px;
+}
 pre.bigcode {
   margin-top: 50px;
   font-size: 400%;
@@ -237,4 +239,13 @@ h3 small {
 }
 .bigh1 h1 {
   font-size: 200px;
+}
+.leftbanner h3{
+   -moz-transform: rotate(-90deg);  /* FF3.5+ */
+     -o-transform: rotate(-90deg);  /* Opera 10.5 */
+-webkit-transform: rotate(-90deg);  /* Saf3.1+, Chrome */
+      left: -300px;
+      top: 340px;
+      width: 768px;
+      position: absolute;
 }
