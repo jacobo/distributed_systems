@@ -1,71 +1,70 @@
-!SLIDE
+!SLIDE[bg=pictures/jacob.jpg] black
 ### Jacob Burkhart
-
-!SLIDE
-### Living with Distributed Systems
-
 <br/><br/><br/><br/>
-
-## `jacobo.github.com/distributed_systems`
-
-.notes I want to talk to you about what it's like to work at engine yard, and more specifically what it's like to work on borders.  By borders I mean the interactions between systems. And in a way this is inevitable. Even if we tried to consolidate our entire platform into a single monolithic ruby on rails application, we still have to communicate with every one of our customers servers running on ec2, and with our command line tools.  So despite beginning as a monolithic app, our engineers have had to deal with a distributed product form the beginning.  And coming in several years after that, I get the benefit of their mistakes. But, I still have room to make mistakes of my own and learn from them.
-
-!SLIDE
-## See also: Talks from Rails Israel
-<center><iframe width="560" height="315" src="http://www.youtube.com/embed/jk88Da3jm3c" frameborder="0" allowfullscreen></iframe>
-<iframe width="560" height="315" src="http://www.youtube.com/embed/-IwihDjVvx4" frameborder="0" allowfullscreen></iframe></center>
+<br/><br/><br/><br/>
+<br/><br/><br/><br/><br/>
+## @beanstalksurf
 
 !SLIDE[bg=pictures/engineyard.png]
 # &nbsp;&nbsp;&nbsp; Engine Yard
 
 .notes we run servers on amazon, we coordinate things for you.  We bill our customers (billing system), we support our customers (zendesk integration), we have sales and marketing (salesforce integration).
 
+!SLIDE[bg=pictures/wall.jpg] shadowh2
+### Living with Distributed Systems
+
+<br/><br/><br/><br/><br/><br/><br/>
+
+## `jacobo.github.com/distributed_systems`
+
+.notes I want to talk to you about what it's like to work at engine yard, and more specifically what it's like to work on borders.  By borders I mean the interactions between systems. And in a way this is inevitable. Even if we tried to consolidate our entire platform into a single monolithic ruby on rails application, we still have to communicate with every one of our customers servers running on ec2, and with our command line tools.  So despite beginning as a monolithic app, our engineers have had to deal with a distributed product form the beginning.  And coming in several years after that, I get the benefit of their mistakes. But, I still have room to make mistakes of my own and learn from them. In researching this topic I see lots of talks out there that spend a lot of type justifying SOA, or explaining why you want multiple systems. I am going to gloss over all of that and try to get to what I consider to be the meat of the problem. Which is the part I think is the hard part. The part where you're likely to make mistakes. And maybe I'm wrong, maybe deciding to do SOA in the first place is the hard part.  But nonetheless, let's proceed.
+
 !SLIDE[bg=graffles/ey-soa.png]
 # &nbsp;
 
-!SLIDE
-### Service-Oriented Architecture
+!SLIDE bullets
 
-* What
-* How
+* The Basics
+* Mapper Pattern
+* Shipping
+* Resiliency
+* Maintenance
 
-.notes In researching this topic I see lots of talks out there that spend a lot of type justifying SOA, or explaining why you want multiple systems. I am going to gloss over all of that and try to get to what I consider to be the meat of the problem. Which is the part I think is the hard part. The part where you're likely to make mistakes. And maybe I'm wrong, maybe deciding to do SOA in the first place is the hard part.  But nonetheless, let's proceed.
+!SLIDE[bg=pictures/messy.png]
+<br/><br/><br/><br/>
+<br/><br/><br/><br/>
+<br/><br/><br/><br/>
+<br/><br/><br/>
+### Not So Basic
 
-!SLIDE
-### Disclaimer: Reality is Messy
-
-!SLIDE
-### Conventions
-
-# Assumptions
-
-# What
-
-.notes I'm going to tell you a bunch of assumptions we make at EY about services. These might not be applicable to everyone or even the right set of assumptions for you. But these assumptions frame all of the services we write and will make it easier for me to talk about them. And having these assumptions commons to all services makes it easier for our development team to move between our main app and dependent services whose codebase they may have never looked at before.  So the assumptions are all very basic, but it's important that we have them.
+.notes It can be messy. I'm going to tell you a bunch of assumptions we make at EY about services. These might not be applicable to everyone or even the right set of assumptions for you. But these assumptions frame all of the services we write and will make it easier for me to talk about them. And having these assumptions commons to all services makes it easier for our development team to move between our main app and dependent services whose codebase they may have never looked at before.  So the assumptions are all very basic, but it's important that we have them.
 
 !SLIDE
-#### DRY
+#### The Basics
 
 # Every piece of knowledge must have a single, unambiguous, authoritative representation within a system
 
-!SLIDE
-#### By Convention
-
-# A Server Providing a Service
-
-.notes There's something providing a service (server or provider)
 
 !SLIDE
-#### By Convention
+<br/>
 
-# A Client Consuming a Service
+### Server Providing a Service
 
-.notes There's something consuming a service (client or consumer). This are often many clients consuming a single service. A One-to-Many relationship.
+<br/>
+<br/>
+
+### Client Consuming a Service
+
+.notes There's something providing a service (server or provider). There's something consuming a service (client or consumer). This are often many clients consuming a single service. A One-to-Many relationship.
+
+!SLIDE[bg=graffles/01-simple.png]
+#### Client and Server
+
+!SLIDE[bg=graffles/02-with-apps.png]
+#### Two Apps
 
 !SLIDE bullets incremental
-#### By Convention
-
-# The ONLY way to communicate is HTTPS
+### The ONLY way to communicate is HTTPS
 
 * No Shared Database
 * No Shared Redis / Memcached
@@ -75,15 +74,6 @@
 
 !SLIDE[bg=pictures/one-env.png] leftbanner
 ###Easy Ops
-
-!SLIDE[bg=graffles/01-simple.png]
-#### As-A-Service
-
-!SLIDE[bg=graffles/02-with-apps.png]
-#### Two Apps
-
-!SLIDE[bg=graffles/03-client-more.png]
-#### An API
 
 !SLIDE
 ### Consumers
@@ -109,10 +99,8 @@
 !SLIDE[bg=graffles/05-multi-client.png]
 #### Multi-Client API
 
-!SLIDE
+!SLIDE[bg=pictures/shai.png]
 ### Mapper Pattern
-
-## It Starts with Confusion
 
 .notes because this is what your co-workers will do
 
@@ -146,7 +134,7 @@
 
       match('/instance_api', :to => EY::InstanceAPIServer.app)
 
-<br/>
+Or
 
     @@@ruby
     map '/instance_api' do
@@ -188,9 +176,6 @@
         Instance.get!(instance_id).request_snapshots
         true
       end
-
-!SLIDE[bg=graffles/06-simple-mapper.png]
-#### Mapper Pattern
 
 !SLIDE smallcode
 
@@ -234,21 +219,14 @@
         deployment.destroy
       end
 
-.notes In practice, a mapper is...
+!SLIDE[bg=graffles/06-simple-mapper.png]
+#### Mapper Pattern
 
 !SLIDE[bg=graffles/07-full-mapper.png]
 #### Fake Mapper
 
-!SLIDE
-### Why are you making me add Sinatra to my Gemfile?
-
-!SLIDE
-### Because of the Mock Mode
-
-    @@@ruby
-    EY::ServicesAPI.enable_mock!(Rails::Application)
-    @mock_backend = EY::ServicesAPI.mock_backend
-    Capybara.app = @mock_backend.app
+!SLIDE[bg=pictures/joe-julian.png]
+### Sinatra in my Rails?
 
 !SLIDE[bg=graffles/08-web-req.png]
 #### Web Request
@@ -266,96 +244,14 @@
 #### API
 
 !SLIDE
-### Models
+### More Mapper Pattern
 
-!SLIDE
-### In the Client
+<iframe width="560" height="315" src="http://www.youtube.com/embed/-IwihDjVvx4" frameborder="0" allowfullscreen></iframe></center>
 
-    @@@ruby
-    module EY
-      module InstanceAPIClient
-        class Snapshot
-          def initialize(attributes)
-            @attributes = attributes
-          end
-
-          def progress
-            @attributes['progress']
-          end
-
-!SLIDE
-### On the Wire
-    @@@ruby
-    {"snapshot":
-      {
-        "id": 2342342,
-        "state": "in-progress"
-        "progress": 50,
-      }
-    }
-
-!SLIDE
-### In the Server
-
-    @@@ruby
-    snapshot_hash.slice("id", "state", "progress")
-
-<br/><br/>
-
-### In the Mapper
-
-    @@@ruby
-    {
-      "id" => snapshot.id,
-      "state" => snapshot.compute_state
-      "progress": snapshot.progress
-    }
-
-
-!SLIDE
-### In your App
-
-    @@@ruby
-    class Snapshot
-      include Awsm::Resource
-
-      property :id,                   Serial
-      property :mount,                String
-      property :progress,             Integer
-
-!SLIDE
-### You may say that's not DRY!
-
-# Coupling vs. Contract
-
-!SLIDE[bg=graffles/07-full-mapper.png]
-### vs. SOAP / XML-RPC
-
-!SLIDE
-#### Breaking Convention?
-
-(picture of inquisitive Thom)
-
-.notes Thom. Chronatog, the mapper pattern, and Offshore. It can be hard to understand and possibly not worth the effort when you are trying to publish public services?  Show code examples so the previous explanation becomes more concrete.
-
-!SLIDE
+!SLIDE[bg=pictures/thom.png]
 ### Shipping
 
-!SLIDE
-#### Baby's first Service
-# SSO
-
-.notes this is where it started. THis is where most people start with breaking out their app. Without it you are seriously limited in the types of re-structuring you can do.
-
-!SLIDE
-#### SSO choices
-# CAS, OpenID, OAuth
-
-* rubycas.github.com
-* github.com/openid/ruby-openid
-* oauth.rubyforge.org
-
-.notes we make the mistake of starting with OpenID. Nobody I've ever talked to (working at EngineYard or otherwise) actually understands how OpenID works. The ruby code is all archaic and hard to follow and leads down to C code. You have to store something called a "nonce", which by default is written to disk, which is not good for any app that runs on more than one server (like most of our apps do).  In my experience CAS is the most versatile system, but last I checked the main ruby CAS server is written in Camping, which is pretty foreign and hard to hack with for most rails devs. We're currently running in Oauth. This was a time consuming process. It may seem obvious, but let me spell it out for you.
+.notes TODO: picture of Thom and Josh?
 
 !SLIDE
 #### Shipping a Service
@@ -398,8 +294,14 @@
 
 .notes There will be bugs, so be prepared to rollback.  "support the new way and the old way at the same time" is actually 2 steps. First you do it on the server, then you do it on the client.  And use feature flags so you don't have to deploy to rollback.
 
-!SLIDE
+!SLIDE[bg=pictures/slack.png]
 ### Design for Resiliency
+
+!SLIDE
+#### Design for Resiliency
+
+# Track Exceptions
+# Log Events
 
 !SLIDE
 #### Design for Resiliency
@@ -434,13 +336,16 @@
 
 # Ajax loading
 
-.notes code example of erroneous and/or (new/unreleased) new relic integration? Live demonstration of services page loading.
+!SLIDE
+#### Design for Resiliency
+
+# Read-only mode
 
 !SLIDE
-### Living with Services
+### Maintenance
 
 !SLIDE
-#### Living with Services
+#### Maintenance
 
 # Continuous Integration
 * Build all Apps
@@ -451,14 +356,14 @@
 .notes examples of ensemble: build, deploy, release
 
 !SLIDE
-#### Living with Services
+#### Maintenance
 
 # The bump release repeat dance
 
 .notes code example of Gemfile hackery?
 
 !SLIDE
-#### Living with Services
+#### All of the tests
 
 * Test the server from the client
 * Test the client from the server
@@ -486,6 +391,11 @@
                    'spec:public_api_gem']
 
 !SLIDE
-### Questions?
+### See Also
 
+<center><iframe width="560" height="315" src="http://www.youtube.com/embed/jk88Da3jm3c" frameborder="0" allowfullscreen></iframe>
+
+
+!SLIDE
+### Questions?
 

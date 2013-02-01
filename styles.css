@@ -234,6 +234,12 @@ h3 small {
   padding-top: 20px;
   background: rgba(0, 0, 0, 0.8);
 }
+.shadowh2 h2 {
+  margin-left: -10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background: rgba(0, 0, 0, 0.6);
+}
 .smaller_p p {
   margin: 0;
 }
