@@ -341,7 +341,7 @@ Or
 
 # Read-only mode
 
-!SLIDE
+!SLIDE[bg=pictures/cemetary.jpg]
 ### Maintenance
 
 !SLIDE
@@ -396,6 +396,6 @@ Or
 <center><iframe width="560" height="315" src="http://www.youtube.com/embed/jk88Da3jm3c" frameborder="0" allowfullscreen></iframe>
 
 
-!SLIDE
+!SLIDE[bg=pictures/tidepool.jpg]
 ### Questions?
 
