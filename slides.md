@@ -30,7 +30,7 @@
 * Resiliency
 * Maintenance
 
-!SLIDE[bg=pictures/messy.png]
+!SLIDE
 <br/><br/><br/><br/>
 <br/><br/><br/><br/>
 <br/><br/><br/><br/>
@@ -99,10 +99,66 @@
 !SLIDE[bg=graffles/05-multi-client.png]
 #### Multi-Client API
 
+!SLIDE[bg=pictures/messy.png]
+<br/><br/><br/><br/>
+<br/><br/><br/><br/>
+<br/><br/><br/><br/>
+<br/><br/><br/>
+### Coupling
+
+!SLIDE bullets incremental begredslash
+### The Obvious
+
+<br/>
+
+    @@@ruby
+    class ElephantsController < ApplicationController
+      def show
+        Elephant.find(params[:id]).to_json
+      end
+    end
+
+<br/>
+
+    @@@ruby
+    uri = URI.parse("http://foo.engineyard.com/elephants/1")
+    JSON.parse(Net::HTTP.get_response(uri))
+
+* Obviously Wrong
+
 !SLIDE[bg=pictures/shai.png]
 ### Mapper Pattern
 
 .notes because this is what your co-workers will do
+
+!SLIDE
+### Talk About The Mapper Pattern
+
+<iframe width="560" height="315" src="http://www.youtube.com/embed/-IwihDjVvx4" frameborder="0" allowfullscreen></iframe></center>
+
+!SLIDE[bg=graffles/06-simple-mapper.png]
+#### Mapper Pattern
+
+!SLIDE[bg=graffles/07-full-mapper.png]
+#### Fake Mapper
+
+!SLIDE[bg=graffles/08-web-req.png]
+#### Web Request
+
+!SLIDE[bg=graffles/10-app-tests.png]
+#### Client App Tests
+
+!SLIDE[bg=graffles/09-api-tests.png]
+#### API Tests
+
+!SLIDE[bg=graffles/11-service-tests.png]
+#### Server App Tests
+
+!SLIDE[bg=graffles/12-api.png]
+#### API
+
+!SLIDE[bg=pictures/martinslack.jpg]
+### Client First
 
 !SLIDE
 ### API Client
@@ -170,15 +226,17 @@ Or
 <br/>
 
     @@@ruby
-    class InstanceAPIMapper
+    module InstanceAPIMapper
 
       def self.request_snapshots_for(instance_id)
         Instance.get!(instance_id).request_snapshots
         true
       end
 
-!SLIDE smallcode
+!SLIDE[bg=graffles/07-full-mapper.png]
+### XML-RPC / SOAP
 
+!SLIDE smallcode
     @@@ruby
     module IntegrationMapper
 
@@ -219,36 +277,18 @@ Or
         deployment.destroy
       end
 
-!SLIDE[bg=graffles/06-simple-mapper.png]
-#### Mapper Pattern
-
-!SLIDE[bg=graffles/07-full-mapper.png]
-#### Fake Mapper
-
 !SLIDE[bg=pictures/joe-julian.png]
 ### Sinatra in my Rails?
 
-!SLIDE[bg=graffles/08-web-req.png]
-#### Web Request
-
-!SLIDE[bg=graffles/10-app-tests.png]
-#### Client App Tests
-
-!SLIDE[bg=graffles/09-api-tests.png]
-#### API Tests
-
-!SLIDE[bg=graffles/11-service-tests.png]
-#### Server App Tests
-
-!SLIDE[bg=graffles/12-api.png]
-#### API
-
 !SLIDE
-### More Mapper Pattern
+### Mock Mode
 
-<iframe width="560" height="315" src="http://www.youtube.com/embed/-IwihDjVvx4" frameborder="0" allowfullscreen></iframe></center>
+    @@@ruby
+    EY::ServicesAPI.enable_mock!(Rails::Application)
+    @mock_backend = EY::ServicesAPI.mock_backend
+    Capybara.app = @mock_backend.app
 
-!SLIDE[bg=pictures/thom.png]
+!SLIDE[bg=pictures/joshthom.jpg]
 ### Shipping
 
 .notes TODO: picture of Thom and Josh?

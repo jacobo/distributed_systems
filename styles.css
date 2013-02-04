@@ -255,3 +255,17 @@ h3 small {
       width: 768px;
       position: absolute;
 }
+.begredslash li {
+  border: 10px solid #f00;
+  text-shadow: none;
+  color: #000;
+  font-weight: bold;
+  background: #f00;
+     -moz-transform: rotate(45deg);  /* FF3.5+ */
+       -o-transform: rotate(45deg);  /* Opera 10.5 */
+  -webkit-transform: rotate(45deg);  /* Saf3.1+, Chrome */
+        left: 100px;
+        top: 340px;
+        width: 768px;
+        position: absolute;
+}
