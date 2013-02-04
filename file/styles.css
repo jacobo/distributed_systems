@@ -234,6 +234,12 @@ h3 small {
   padding-top: 20px;
   background: rgba(0, 0, 0, 0.8);
 }
+.shadowh2 h2 {
+  margin-left: -10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background: rgba(0, 0, 0, 0.6);
+}
 .smaller_p p {
   margin: 0;
 }
@@ -248,4 +254,18 @@ h3 small {
       top: 340px;
       width: 768px;
       position: absolute;
+}
+.begredslash li {
+  border: 10px solid #f00;
+  text-shadow: none;
+  color: #000;
+  font-weight: bold;
+  background: #f00;
+     -moz-transform: rotate(45deg);  /* FF3.5+ */
+       -o-transform: rotate(45deg);  /* Opera 10.5 */
+  -webkit-transform: rotate(45deg);  /* Saf3.1+, Chrome */
+        left: 100px;
+        top: 340px;
+        width: 768px;
+        position: absolute;
 }

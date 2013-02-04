@@ -86,91 +86,74 @@
 </div>
 
 <div id="slides" class="offscreen" style="display:none;">
-<html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/1">
+<html><body><div style="background: url('file/./pictures/jacob.jpg') center no-repeat;" class="slide" data-transition="none">
+<div class="content black" ref="./slides/1">
 <h3>Jacob Burkhart</h3>
-</div>
-</div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/2">
-<h3>Living with Distributed Systems</h3>
 
-<p><br><br><br><br></p>
+<p><br><br><br><br><br><br><br><br><br><br><br><br><br></p>
 
-<h2><code>jacobo.github.com/distributed_systems</code></h2>
-
-<p class="notes">I want to talk to you about what it's like to work at engine yard, and more specifically what it's like to work on borders.  By borders I mean the interactions between systems. And in a way this is inevitable. Even if we tried to consolidate our entire platform into a single monolithic ruby on rails application, we still have to communicate with every one of our customers servers running on ec2, and with our command line tools.  So despite beginning as a monolithic app, our engineers have had to deal with a distributed product form the beginning.  And coming in several years after that, I get the benefit of their mistakes. But, I still have room to make mistakes of my own and learn from them.</p>
-</div>
-</div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/3">
-<h2>See also: Talks from Rails Israel</h2>
-
-<p></p>
-<center>
-<iframe width="560" height="315" src="http://www.youtube.com/embed/jk88Da3jm3c" frameborder="0" allowfullscreen></iframe>
-<iframe width="560" height="315" src="http://www.youtube.com/embed/-IwihDjVvx4" frameborder="0" allowfullscreen></iframe>
-</center>
+<h2>@beanstalksurf</h2>
 </div>
 </div></body></html><html><body><div style="background: url('file/./pictures/engineyard.png') center no-repeat;" class="slide" data-transition="none">
-<div class="content" ref="./slides/4">
+<div class="content" ref="./slides/2">
 <h1>&#160;&#160;&#160; Engine Yard</h1>
 
 <p class="notes">we run servers on amazon, we coordinate things for you.  We bill our customers (billing system), we support our customers (zendesk integration), we have sales and marketing (salesforce integration).</p>
 </div>
+</div></body></html><html><body><div style="background: url('file/./pictures/wall.jpg') center no-repeat;" class="slide" data-transition="none">
+<div class="content shadowh2" ref="./slides/3">
+<h3>Living with Distributed Systems</h3>
+
+<p><br><br><br><br><br><br><br></p>
+
+<h2><code>jacobo.github.com/distributed_systems</code></h2>
+
+<p class="notes">I want to talk to you about what it's like to work at engine yard, and more specifically what it's like to work on borders.  By borders I mean the interactions between systems. And in a way this is inevitable. Even if we tried to consolidate our entire platform into a single monolithic ruby on rails application, we still have to communicate with every one of our customers servers running on ec2, and with our command line tools.  So despite beginning as a monolithic app, our engineers have had to deal with a distributed product form the beginning.  And coming in several years after that, I get the benefit of their mistakes. But, I still have room to make mistakes of my own and learn from them. In researching this topic I see lots of talks out there that spend a lot of type justifying SOA, or explaining why you want multiple systems. I am going to gloss over all of that and try to get to what I consider to be the meat of the problem. Which is the part I think is the hard part. The part where you're likely to make mistakes. And maybe I'm wrong, maybe deciding to do SOA in the first place is the hard part.  But nonetheless, let's proceed.</p>
+</div>
 </div></body></html><html><body><div style="background: url('file/./graffles/ey-soa.png') center no-repeat;" class="slide" data-transition="none">
-<div class="content" ref="./slides/5">
+<div class="content" ref="./slides/4">
 <h1>&#160;</h1>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/6">
-<h3>Service-Oriented Architecture</h3>
-
+<div class="content bullets" ref="./slides/5">
 <ul>
-<li>What</li>
-<li>How</li>
+<li>The Basics</li>
+<li>Coupling</li>
+<li>Shipping</li>
+<li>Resiliency</li>
+<li>Maintenance</li>
 </ul>
-<p class="notes">In researching this topic I see lots of talks out there that spend a lot of type justifying SOA, or explaining why you want multiple systems. I am going to gloss over all of that and try to get to what I consider to be the meat of the problem. Which is the part I think is the hard part. The part where you're likely to make mistakes. And maybe I'm wrong, maybe deciding to do SOA in the first place is the hard part.  But nonetheless, let's proceed.</p>
+<p class="notes">It can be messy. I'm going to tell you a bunch of assumptions we make at EY about services. These might not be applicable to everyone or even the right set of assumptions for you. But these assumptions frame all of the services we write and will make it easier for me to talk about them. And having these assumptions commons to all services makes it easier for our development team to move between our main app and dependent services whose codebase they may have never looked at before.  So the assumptions are all very basic, but it's important that we have them.</p>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/7">
-<h3>Disclaimer: Reality is Messy</h3>
-</div>
-</div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/8">
-<h3>Conventions</h3>
-
-<h1>Assumptions</h1>
-
-<h1>What</h1>
-
-<p class="notes">I'm going to tell you a bunch of assumptions we make at EY about services. These might not be applicable to everyone or even the right set of assumptions for you. But these assumptions frame all of the services we write and will make it easier for me to talk about them. And having these assumptions commons to all services makes it easier for our development team to move between our main app and dependent services whose codebase they may have never looked at before.  So the assumptions are all very basic, but it's important that we have them.</p>
-</div>
-</div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/9">
-<h4>DRY</h4>
+<div class="content" ref="./slides/6">
+<h4>The Basics</h4>
 
 <h1>Every piece of knowledge must have a single, unambiguous, authoritative representation within a system</h1>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/10">
-<h4>By Convention</h4>
+<div class="content" ref="./slides/7">
+<p><br></p>
 
-<h1>A Server Providing a Service</h1>
+<h3>Server Providing a Service</h3>
 
-<p class="notes">There's something providing a service (server or provider)</p>
+<p><br><br></p>
+
+<h3>Client Consuming a Service</h3>
+
+<p class="notes">There's something providing a service (server or provider). There's something consuming a service (client or consumer). This are often many clients consuming a single service. A One-to-Many relationship.</p>
+</div>
+</div></body></html><html><body><div style="background: url('file/./graffles/01-simple.png') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/8">
+<h4>Client and Server</h4>
+</div>
+</div></body></html><html><body><div style="background: url('file/./graffles/02-with-apps.png') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/9">
+<h4>Two Apps</h4>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/11">
-<h4>By Convention</h4>
-
-<h1>A Client Consuming a Service</h1>
-
-<p class="notes">There's something consuming a service (client or consumer). This are often many clients consuming a single service. A One-to-Many relationship.</p>
-</div>
-</div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content bullets incremental" ref="./slides/12">
-<h4>By Convention</h4>
-
-<h1>The ONLY way to communicate is HTTPS</h1>
+<div class="content bullets incremental" ref="./slides/10">
+<h3>The ONLY way to communicate is HTTPS</h3>
 
 <ul>
 <li>No Shared Database</li>
@@ -180,23 +163,11 @@
 <p class="notes">no shared database, no shared disk, no message bus. Nothing against message buses, but that would be an entirely different talk. And while we've talked about it many times at EY. We've never deployed a service that provides is service to other applications via a message bus.</p>
 </div>
 </div></body></html><html><body><div style="background: url('file/./pictures/one-env.png') center no-repeat;" class="slide" data-transition="none">
-<div class="content leftbanner" ref="./slides/13">
+<div class="content leftbanner" ref="./slides/11">
 <h3>Easy Ops</h3>
 </div>
-</div></body></html><html><body><div style="background: url('file/./graffles/01-simple.png') center no-repeat;" class="slide" data-transition="none">
-<div class="content" ref="./slides/14">
-<h4>As-A-Service</h4>
-</div>
-</div></body></html><html><body><div style="background: url('file/./graffles/02-with-apps.png') center no-repeat;" class="slide" data-transition="none">
-<div class="content" ref="./slides/15">
-<h4>Two Apps</h4>
-</div>
-</div></body></html><html><body><div style="background: url('file/./graffles/03-client-more.png') center no-repeat;" class="slide" data-transition="none">
-<div class="content" ref="./slides/16">
-<h4>An API</h4>
-</div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/17">
+<div class="content" ref="./slides/12">
 <h3>Consumers</h3>
 
 <pre class="sh_ruby"><code>class Consumer &lt; ActiveRecord::Base
@@ -213,278 +184,182 @@
 <pre class="sh_ruby"><code>use EY::ApiHMAC::ApiAuth::Server, Consumer</code></pre>
 </div>
 </div></body></html><html><body><div style="background: url('file/./graffles/04-two-way-client.png') center no-repeat;" class="slide" data-transition="none">
-<div class="content" ref="./slides/18">
+<div class="content" ref="./slides/13">
 <h4>Bi-Directional API</h4>
 </div>
 </div></body></html><html><body><div style="background: url('file/./graffles/05-multi-client.png') center no-repeat;" class="slide" data-transition="none">
-<div class="content" ref="./slides/19">
+<div class="content" ref="./slides/14">
 <h4>Multi-Client API</h4>
 </div>
-</div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/20">
-<h3>Mapper Pattern</h3>
+</div></body></html><html><body><div style="background: url('file/./pictures/messy.png') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/15">
+<p><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></p>
 
-<h2>It Starts with Confusion</h2>
+<h3>Coupling</h3>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content bullets incremental begredslash" ref="./slides/16">
+<h3>The Obvious</h3>
+
+<p><br></p>
+
+<pre class="sh_ruby"><code>class ElephantsController &lt; ApplicationController
+  def show
+    Elephant.find(params[:id]).to_json
+  end
+end</code></pre>
+
+<p><br></p>
+
+<pre class="sh_ruby"><code>uri = URI.parse("http://foo.engineyard.com/elephants/1")
+JSON.parse(Net::HTTP.get_response(uri))</code></pre>
+
+<ul>
+<li>Too Much Coupling!</li>
+</ul>
+</div>
+</div></body></html><html><body><div style="background: url('file/./pictures/shai.png') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/17">
+<h3>Mapper Pattern</h3>
 
 <p class="notes">because this is what your co-workers will do</p>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/21">
-<h3>API Client</h3>
+<div class="content" ref="./slides/18">
+<h3>Talk About The Mapper Pattern</h3>
 
-<p><br></p>
-
-<pre class="sh_ruby"><code>module EY
-  class InstanceAPIClient
-
-    def request_snapshot
-      uri = URI.join(base_url, "volumes/all/snapshots")
-      post(uri.to_s, default_headers)
-    end</code></pre>
-
-<p><br></p>
-
-<h2><code>volumes/all/snapshots</code></h2>
-</div>
-</div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/22">
-<h3>Where's the route?</h3>
-
-<h2><code>volumes/all/snapshots</code></h2>
-
-<p><br></p>
-
-<pre class="sh_ruby"><code>Application.routes.draw do
-
-  match('/instance_api', :to =&gt; EY::InstanceAPIServer.app)</code></pre>
-
-<p><br></p>
-
-<pre class="sh_ruby"><code>map '/instance_api' do
-  run EY::InstanceAPIServer.app
-end</code></pre>
-</div>
-</div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/23">
-<h3>Sinatra implements the Server</h3>
-
-<pre class="sh_ruby"><code>module EY::InstanceAPIServer::Snapshots
-  class Rackapp &lt; Sinatra::Base
-
-    post "/all/snapshots" do
-      validate!
-      if snapshot =
-        InstanceAPIServer.mapper.
-          request_snapshots_for(instance_id)
-      then
-        status 201
-        {}.to_json
-      else
-        not_found
-      end
-    end</code></pre>
-</div>
-</div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/24">
-<h3>Mapper implements the behavior</h3>
-
-<pre class="sh_ruby"><code>InstanceAPIServer.mapper = InstanceAPIMapper</code></pre>
-
-<p><br></p>
-
-<pre class="sh_ruby"><code>class InstanceAPIMapper
-
-  def self.request_snapshots_for(instance_id)
-    Instance.get!(instance_id).request_snapshots
-    true
-  end</code></pre>
+<p><iframe width="560" height="315" src="http://www.youtube.com/embed/-IwihDjVvx4" frameborder="0" allowfullscreen></iframe></p>
 </div>
 </div></body></html><html><body><div style="background: url('file/./graffles/06-simple-mapper.png') center no-repeat;" class="slide" data-transition="none">
-<div class="content" ref="./slides/25">
+<div class="content" ref="./slides/19">
 <h4>Mapper Pattern</h4>
 </div>
-</div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content smallcode" ref="./slides/26">
-<pre class="sh_ruby"><code>module IntegrationMapper
-
-  def self.save_api_creds(auth_id, auth_key)
-    creds = EyCredentials.first || EyCredentials.create!
-    creds.update_attributes!(:auth_id =&gt; auth_id, :auth_key =&gt; auth_key)
-  end
-
-  def self.api_creds
-    creds = EyCredentials.first || EyCredentials.create!
-    {:auth_id =&gt; creds.auth_id, :auth_key =&gt; creds.auth_key}
-  end
-
-  def self.service_account_create(service_account)
-    customer = Customer.create!(:name                   =&gt; service_account.name,
-                                :tf_service_account_url =&gt; service_account.url,
-                                :tf_messages_url        =&gt; service_account.messages_url)
-    {:id =&gt; customer.id}
-  end
-
-  def self.service_account_cancel(customer_id)
-    Customer.find(customer_id).destroy
-  end
-
-  def self.provisioned_service_create(customer_id, provisioned_service)
-    customer = Customer.find(customer_id)
-    deployment = customer.deployments.create!(
-      :name                       =&gt; "#{provisioned_service.app.name} / #{provisioned_service.environment.name}",
-      :tf_provisioned_service_url =&gt; provisioned_service.url,
-      :tf_messages_url            =&gt; provisioned_service.messages_url,
-    )
-    {:id =&gt; deployment.id, :configuration_url =&gt; sso_deployment_path(deployment), :vars =&gt; {}}
-  end
-
-  def self.provisioned_service_cancel(customer_id, deployment_id)
-    customer = Customer.find(customer_id)
-    deployment = customer.deployments.find(deployment_id)
-    deployment.destroy
-  end</code></pre>
-
-<p class="notes">In practice, a mapper is...</p>
-</div>
 </div></body></html><html><body><div style="background: url('file/./graffles/07-full-mapper.png') center no-repeat;" class="slide" data-transition="none">
-<div class="content" ref="./slides/27">
+<div class="content" ref="./slides/20">
 <h4>Fake Mapper</h4>
+</div>
+</div></body></html><html><body><div style="background: url('file/./graffles/08-web-req.png') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/21">
+<h4>Web Request</h4>
+</div>
+</div></body></html><html><body><div style="background: url('file/./graffles/10-app-tests.png') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/22">
+<h4>Client App Tests</h4>
+</div>
+</div></body></html><html><body><div style="background: url('file/./graffles/09-api-tests.png') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/23">
+<h4>API Tests</h4>
+</div>
+</div></body></html><html><body><div style="background: url('file/./graffles/11-service-tests.png') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/24">
+<h4>Server App Tests</h4>
+</div>
+</div></body></html><html><body><div style="background: url('file/./graffles/12-api.png') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/25">
+<h4>API</h4>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/26">
+<h3>App Usage</h3>
+
+<pre class="sh_ruby"><code>JohnnyCashApi::Client.send_usage(
+  :uom            =&gt; "Add-on #{invoice.service.name}",
+  :quantity       =&gt; invoice.total_amount_cents / 100.0,
+  :description    =&gt; invoice.line_item_description,
+  :date           =&gt; invoice.created_at,
+  :account_sso_id =&gt; invoice.service_account.sso_account_id)</code></pre>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/27">
+<h3>API Client</h3>
+
+<pre class="sh_ruby"><code>def self.send_usage(params)
+  connection.send_usage(api_url, params)
+end</code></pre>
+
+<p><br></p>
+
+<pre class="sh_ruby"><code>class Connection &lt; EY::ApiHMAC::AuthedConnection
+  def send_usage(api_url, params)
+    post("#{api_url}usage", :usage =&gt; params)
+  end</code></pre>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
 <div class="content" ref="./slides/28">
-<h3>Why are you making me add Sinatra to my Gemfile?</h3>
+<h3>Where's the route?</h3>
+
+<p><br></p>
+
+<pre class="sh_ruby"><code>JohnnyCash::Application.routes.draw do
+
+  mount JohnnyCashApi::Server.server, :at =&gt; "/api"</code></pre>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
 <div class="content" ref="./slides/29">
-<h3>Because of the Mock Mode</h3>
+<h3>Sinatra implements the Server</h3>
+
+<pre class="sh_ruby"><code>class ApiServer &lt; Sinatra::Base
+
+  use EY::ApiHMAC::ApiAuth::Server, UsageSourceDelegate
+
+  post "/usage" do
+    usage_source = UsageSourceDelegate.find(request.env[EY::ApiHMAC::ApiAuth::CONSUMER])
+    content_type :json
+    json = JSON.parse(request.body.read)["usage"]
+    mapper.handle_usage(usage_source,
+      json['account_sso_id'], json['uom'], json['quantity'],
+      json['description'], Time.parse(json['date']), json["remote_id"])
+    {}.to_json
+  end</code></pre>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/30">
+<h3>Mapper implements the behavior</h3>
+
+<pre class="sh_ruby"><code>JohnnyCashApi::Server.mapper = JohnnyCashApiMapper</code></pre>
+
+<p><br></p>
+
+<pre class="sh_ruby"><code>module JohnnyCashApiMapper
+  def self.handle_usage(usage_source, account_sso_id, uom, quantity, description, date, remote_id)
+    account = Account.find(:sso_id =&gt; account_sso_id)
+    account.usages.create!(
+      :remote_id     =&gt; remote_id,
+      :product_type  =&gt; "addons",
+      :quantity      =&gt; quantity,
+      :description   =&gt; description,
+      :final         =&gt; true,
+      :billing_month =&gt; BillingMonth.lookup(date))
+  end</code></pre>
+</div>
+</div></body></html><html><body><div style="background: url('file/./graffles/07-full-mapper.png') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/31">
+<p>&#160;</p>
+</div>
+</div></body></html><html><body><div style="background: url('file/./pictures/joe-julian.png') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/32">
+<h3>Sinatra in my Rails?</h3>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/33">
+<h3>Mock Mode</h3>
 
 <pre class="sh_ruby"><code>EY::ServicesAPI.enable_mock!(Rails::Application)
 @mock_backend = EY::ServicesAPI.mock_backend
 Capybara.app = @mock_backend.app</code></pre>
 </div>
-</div></body></html><html><body><div style="background: url('file/./graffles/08-web-req.png') center no-repeat;" class="slide" data-transition="none">
-<div class="content" ref="./slides/30">
-<h4>Web Request</h4>
-</div>
-</div></body></html><html><body><div style="background: url('file/./graffles/10-app-tests.png') center no-repeat;" class="slide" data-transition="none">
-<div class="content" ref="./slides/31">
-<h4>Client App Tests</h4>
-</div>
-</div></body></html><html><body><div style="background: url('file/./graffles/09-api-tests.png') center no-repeat;" class="slide" data-transition="none">
-<div class="content" ref="./slides/32">
-<h4>API Tests</h4>
-</div>
-</div></body></html><html><body><div style="background: url('file/./graffles/11-service-tests.png') center no-repeat;" class="slide" data-transition="none">
-<div class="content" ref="./slides/33">
-<h4>Server App Tests</h4>
-</div>
-</div></body></html><html><body><div style="background: url('file/./graffles/12-api.png') center no-repeat;" class="slide" data-transition="none">
+</div></body></html><html><body><div style="background: url('file/./graffles/07-full-mapper.png') center no-repeat;" class="slide" data-transition="none">
 <div class="content" ref="./slides/34">
-<h4>API</h4>
+<h3>XML-RPC / SOAP</h3>
 </div>
-</div></body></html><html><body><div class="slide" data-transition="none">
+</div></body></html><html><body><div style="background: url('file/./pictures/joshthom.jpg') center no-repeat;" class="slide" data-transition="none">
 <div class="content" ref="./slides/35">
-<h3>Models</h3>
+<h3>Shipping</h3>
+
+<p class="notes">TODO: picture of Thom and Josh?</p>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
 <div class="content" ref="./slides/36">
-<h3>In the Client</h3>
-
-<pre class="sh_ruby"><code>module EY
-  module InstanceAPIClient
-    class Snapshot
-      def initialize(attributes)
-        @attributes = attributes
-      end
-
-      def progress
-        @attributes['progress']
-      end</code></pre>
-</div>
-</div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/37">
-<h3>On the Wire</h3>
-
-<pre class="sh_ruby"><code>{"snapshot":
-  {
-    "id": 2342342,
-    "state": "in-progress"
-    "progress": 50,
-  }
-}</code></pre>
-</div>
-</div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/38">
-<h3>In the Server</h3>
-
-<pre class="sh_ruby"><code>snapshot_hash.slice("id", "state", "progress")</code></pre>
-
-<p><br><br></p>
-
-<h3>In the Mapper</h3>
-
-<pre class="sh_ruby"><code>{
-  "id" =&gt; snapshot.id,
-  "state" =&gt; snapshot.compute_state
-  "progress": snapshot.progress
-}</code></pre>
-</div>
-</div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/39">
-<h3>In your App</h3>
-
-<pre class="sh_ruby"><code>class Snapshot
-  include Awsm::Resource
-
-  property :id,                   Serial
-  property :mount,                String
-  property :progress,             Integer</code></pre>
-</div>
-</div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/40">
-<h3>You may say that's not DRY!</h3>
-
-<h1>Coupling vs. Contract</h1>
-</div>
-</div></body></html><html><body><div style="background: url('file/./graffles/07-full-mapper.png') center no-repeat;" class="slide" data-transition="none">
-<div class="content" ref="./slides/41">
-<h3>vs. SOAP / XML-RPC</h3>
-</div>
-</div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/42">
-<h4>Breaking Convention?</h4>
-
-<p>(picture of inquisitive Thom)</p>
-
-<p class="notes">Thom. Chronatog, the mapper pattern, and Offshore. It can be hard to understand and possibly not worth the effort when you are trying to publish public services?  Show code examples so the previous explanation becomes more concrete.</p>
-</div>
-</div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/43">
-<h3>Shipping</h3>
-</div>
-</div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/44">
-<h4>Baby's first Service</h4>
-
-<h1>SSO</h1>
-
-<p class="notes">this is where it started. THis is where most people start with breaking out their app. Without it you are seriously limited in the types of re-structuring you can do.</p>
-</div>
-</div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/45">
-<h4>SSO choices</h4>
-
-<h1>CAS, OpenID, OAuth</h1>
-
-<ul>
-<li>rubycas.github.com</li>
-<li>github.com/openid/ruby-openid</li>
-<li>oauth.rubyforge.org</li>
-</ul>
-<p class="notes">we make the mistake of starting with OpenID. Nobody I've ever talked to (working at EngineYard or otherwise) actually understands how OpenID works. The ruby code is all archaic and hard to follow and leads down to C code. You have to store something called a "nonce", which by default is written to disk, which is not good for any app that runs on more than one server (like most of our apps do).  In my experience CAS is the most versatile system, but last I checked the main ruby CAS server is written in Camping, which is pretty foreign and hard to hack with for most rails devs. We're currently running in Oauth. This was a time consuming process. It may seem obvious, but let me spell it out for you.</p>
-</div>
-</div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/46">
 <h4>Shipping a Service</h4>
 
 <h1>Do it Live</h1>
@@ -492,31 +367,31 @@ Capybara.app = @mock_backend.app</code></pre>
 <h1>Do it Incrementally</h1>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/47">
+<div class="content" ref="./slides/37">
 <h4>Shipping a Service</h4>
 
 <h1>4 step migration</h1>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/48">
+<div class="content" ref="./slides/38">
 <h4>Shipping a Service</h4>
 
 <h1>1. support the old way</h1>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/49">
+<div class="content" ref="./slides/39">
 <h4>Shipping a Service</h4>
 
 <h1>2. support the new way and the old way at the same time</h1>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/50">
+<div class="content" ref="./slides/40">
 <h4>Shipping a Service</h4>
 
 <h1>3. upgrade every dependent system</h1>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/51">
+<div class="content" ref="./slides/41">
 <h4>Shipping a Service</h4>
 
 <h1>4. support only the new way</h1>
@@ -524,7 +399,7 @@ Capybara.app = @mock_backend.app</code></pre>
 <p>(Yay! throw away all that crappy old code from the old way).</p>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/52">
+<div class="content" ref="./slides/42">
 <h4>Shipping a Service</h4>
 
 <h1>There will be bugs</h1>
@@ -535,18 +410,26 @@ Capybara.app = @mock_backend.app</code></pre>
 
 <p class="notes">There will be bugs, so be prepared to rollback.  "support the new way and the old way at the same time" is actually 2 steps. First you do it on the server, then you do it on the client.  And use feature flags so you don't have to deploy to rollback.</p>
 </div>
-</div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/53">
+</div></body></html><html><body><div style="background: url('file/./pictures/slack.png') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/43">
 <h3>Design for Resiliency</h3>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/54">
+<div class="content" ref="./slides/44">
+<h4>Design for Resiliency</h4>
+
+<h1>Track Exceptions</h1>
+
+<h1>Log Events</h1>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/45">
 <h4>Design for Resiliency</h4>
 
 <h1>Retry 500s</h1>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/55">
+<div class="content" ref="./slides/46">
 <h4>Design for Resiliency</h4>
 
 <h1>Rack-Client</h1>
@@ -554,13 +437,13 @@ Capybara.app = @mock_backend.app</code></pre>
 <h1>Rack-Idempotent</h1>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/56">
+<div class="content" ref="./slides/47">
 <h4>Design for Resiliency</h4>
 
 <h1>Timeout</h1>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/57">
+<div class="content" ref="./slides/48">
 <h4>Design for Resiliency</h4>
 
 <h1>Avoid side effects, model intent locally</h1>
@@ -568,26 +451,30 @@ Capybara.app = @mock_backend.app</code></pre>
 <p class="notes">LaBrea problems. (much of which was solved by rack-client + rack-idempotent) weren't being sent to airbrake because of unicorn timeout. Our own timeout wasn't working because it was happening in C blocking network IO on connection to labrea. We were swallowing the exceptions because of a unicorn timeout, or because of a blanket (failure to connect to instance) error.  Having new relic would have helped us see that labrea or keymaster was having response time issues.  Needed better error handling. Never assume that it's safe to rescue exceptions from an operation you performed. Don't make service calls as after_save side effects. use a "state" or other local column to keep track of if the service call was made or not.</p>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/58">
+<div class="content" ref="./slides/49">
 <h4>Design for Resiliency</h4>
 
 <h1>Cache (using Redis)</h1>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/59">
+<div class="content" ref="./slides/50">
 <h4>Design for Resiliency</h4>
 
 <h1>Ajax loading</h1>
+</div>
+</div></body></html><html><body><div class="slide" data-transition="none">
+<div class="content" ref="./slides/51">
+<h4>Design for Resiliency</h4>
 
-<p class="notes">code example of erroneous and/or (new/unreleased) new relic integration? Live demonstration of services page loading.</p>
+<h1>Read-only mode</h1>
+</div>
+</div></body></html><html><body><div style="background: url('file/./pictures/cemetary.jpg') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/52">
+<h3>Maintenance</h3>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/60">
-<h3>Living with Services</h3>
-</div>
-</div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/61">
-<h4>Living with Services</h4>
+<div class="content" ref="./slides/53">
+<h4>Maintenance</h4>
 
 <h1>Continuous Integration</h1>
 
@@ -600,16 +487,16 @@ Capybara.app = @mock_backend.app</code></pre>
 <p class="notes">examples of ensemble: build, deploy, release</p>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/62">
-<h4>Living with Services</h4>
+<div class="content" ref="./slides/54">
+<h4>Maintenance</h4>
 
 <h1>The bump release repeat dance</h1>
 
 <p class="notes">code example of Gemfile hackery?</p>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/63">
-<h4>Living with Services</h4>
+<div class="content" ref="./slides/55">
+<h4>All of the tests</h4>
 
 <ul>
 <li>Test the server from the client</li>
@@ -618,7 +505,7 @@ Capybara.app = @mock_backend.app</code></pre>
 </ul>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/64">
+<div class="content" ref="./slides/56">
 <h3>Bi-Directional Testing</h3>
 
 <pre class="sh_ruby"><code>RSpec::Core::RakeTask.new(:internal_api_gem) do |t|
@@ -639,7 +526,16 @@ task :spec =&gt; ['spec:rails', 'spec:internal_api_gem',
                'spec:public_api_gem']</code></pre>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/65">
+<div class="content" ref="./slides/57">
+<h3>See Also</h3>
+
+<p></p>
+<center>
+<iframe width="560" height="315" src="http://www.youtube.com/embed/jk88Da3jm3c" frameborder="0" allowfullscreen></iframe>
+</center>
+</div>
+</div></body></html><html><body><div style="background: url('file/./pictures/tidepool.jpg') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/58">
 <h3>Questions?</h3>
 </div>
 </div></body></html></div>
