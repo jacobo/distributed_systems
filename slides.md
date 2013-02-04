@@ -25,17 +25,10 @@
 !SLIDE bullets
 
 * The Basics
-* Mapper Pattern
+* Coupling
 * Shipping
 * Resiliency
 * Maintenance
-
-!SLIDE
-<br/><br/><br/><br/>
-<br/><br/><br/><br/>
-<br/><br/><br/><br/>
-<br/><br/><br/>
-### Not So Basic
 
 .notes It can be messy. I'm going to tell you a bunch of assumptions we make at EY about services. These might not be applicable to everyone or even the right set of assumptions for you. But these assumptions frame all of the services we write and will make it easier for me to talk about them. And having these assumptions commons to all services makes it easier for our development team to move between our main app and dependent services whose codebase they may have never looked at before.  So the assumptions are all very basic, but it's important that we have them.
 
@@ -124,7 +117,7 @@
     uri = URI.parse("http://foo.engineyard.com/elephants/1")
     JSON.parse(Net::HTTP.get_response(uri))
 
-* Obviously Wrong
+* Too Much Coupling!
 
 !SLIDE[bg=pictures/shai.png]
 ### Mapper Pattern
@@ -157,125 +150,85 @@
 !SLIDE[bg=graffles/12-api.png]
 #### API
 
-!SLIDE[bg=pictures/martinslack.jpg]
-### Client First
+!SLIDE
+### App Usage
+
+    @@@ruby
+    JohnnyCashApi::Client.send_usage(
+      :uom            => "Add-on #{invoice.service.name}",
+      :quantity       => invoice.total_amount_cents / 100.0,
+      :description    => invoice.line_item_description,
+      :date           => invoice.created_at,
+      :account_sso_id => invoice.service_account.sso_account_id)
+
 
 !SLIDE
 ### API Client
 
+    @@@ruby
+    def self.send_usage(params)
+      connection.send_usage(api_url, params)
+    end
+
 <br/>
 
     @@@ruby
-    module EY
-      class InstanceAPIClient
-
-        def request_snapshot
-          uri = URI.join(base_url, "volumes/all/snapshots")
-          post(uri.to_s, default_headers)
-        end
-
-<br/>
-
-## `volumes/all/snapshots`
+    class Connection < EY::ApiHMAC::AuthedConnection
+      def send_usage(api_url, params)
+        post("#{api_url}usage", :usage => params)
+      end
 
 !SLIDE
 ### Where's the route?
 
-## `volumes/all/snapshots`
-
 <br/>
 
     @@@ruby
-    Application.routes.draw do
+    JohnnyCash::Application.routes.draw do
 
-      match('/instance_api', :to => EY::InstanceAPIServer.app)
-
-Or
-
-    @@@ruby
-    map '/instance_api' do
-      run EY::InstanceAPIServer.app
-    end
+      mount JohnnyCashApi::Server.server, :at => "/api"
 
 !SLIDE
 ### Sinatra implements the Server
 
     @@@ruby
-    module EY::InstanceAPIServer::Snapshots
-      class Rackapp < Sinatra::Base
+    class ApiServer < Sinatra::Base
 
-        post "/all/snapshots" do
-          validate!
-          if snapshot =
-            InstanceAPIServer.mapper.
-              request_snapshots_for(instance_id)
-          then
-            status 201
-            {}.to_json
-          else
-            not_found
-          end
-        end
+      use EY::ApiHMAC::ApiAuth::Server, UsageSourceDelegate
+
+      post "/usage" do
+        usage_source = UsageSourceDelegate.find(request.env[EY::ApiHMAC::ApiAuth::CONSUMER])
+        content_type :json
+        json = JSON.parse(request.body.read)["usage"]
+        mapper.handle_usage(usage_source,
+          json['account_sso_id'], json['uom'], json['quantity'],
+          json['description'], Time.parse(json['date']), json["remote_id"])
+        {}.to_json
+      end
 
 !SLIDE
 ### Mapper implements the behavior
 
     @@@ruby
-    InstanceAPIServer.mapper = InstanceAPIMapper
+    JohnnyCashApi::Server.mapper = JohnnyCashApiMapper
 
 <br/>
 
     @@@ruby
-    module InstanceAPIMapper
-
-      def self.request_snapshots_for(instance_id)
-        Instance.get!(instance_id).request_snapshots
-        true
+    module JohnnyCashApiMapper
+      def self.handle_usage(usage_source, account_sso_id, uom, quantity, description, date, remote_id)
+        account = Account.find(:sso_id => account_sso_id)
+        account.usages.create!(
+          :remote_id     => remote_id,
+          :product_type  => "addons",
+          :quantity      => quantity,
+          :description   => description,
+          :final         => true,
+          :billing_month => BillingMonth.lookup(date))
       end
 
 !SLIDE[bg=graffles/07-full-mapper.png]
-### XML-RPC / SOAP
-
-!SLIDE smallcode
-    @@@ruby
-    module IntegrationMapper
-
-      def self.save_api_creds(auth_id, auth_key)
-        creds = EyCredentials.first || EyCredentials.create!
-        creds.update_attributes!(:auth_id => auth_id, :auth_key => auth_key)
-      end
-
-      def self.api_creds
-        creds = EyCredentials.first || EyCredentials.create!
-        {:auth_id => creds.auth_id, :auth_key => creds.auth_key}
-      end
-
-      def self.service_account_create(service_account)
-        customer = Customer.create!(:name                   => service_account.name,
-                                    :tf_service_account_url => service_account.url,
-                                    :tf_messages_url        => service_account.messages_url)
-        {:id => customer.id}
-      end
-
-      def self.service_account_cancel(customer_id)
-        Customer.find(customer_id).destroy
-      end
-
-      def self.provisioned_service_create(customer_id, provisioned_service)
-        customer = Customer.find(customer_id)
-        deployment = customer.deployments.create!(
-          :name                       => "#{provisioned_service.app.name} / #{provisioned_service.environment.name}",
-          :tf_provisioned_service_url => provisioned_service.url,
-          :tf_messages_url            => provisioned_service.messages_url,
-        )
-        {:id => deployment.id, :configuration_url => sso_deployment_path(deployment), :vars => {}}
-      end
-
-      def self.provisioned_service_cancel(customer_id, deployment_id)
-        customer = Customer.find(customer_id)
-        deployment = customer.deployments.find(deployment_id)
-        deployment.destroy
-      end
+&nbsp;
 
 !SLIDE[bg=pictures/joe-julian.png]
 ### Sinatra in my Rails?
@@ -287,6 +240,9 @@ Or
     EY::ServicesAPI.enable_mock!(Rails::Application)
     @mock_backend = EY::ServicesAPI.mock_backend
     Capybara.app = @mock_backend.app
+
+!SLIDE[bg=graffles/07-full-mapper.png]
+### XML-RPC / SOAP
 
 !SLIDE[bg=pictures/joshthom.jpg]
 ### Shipping
