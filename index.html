@@ -121,7 +121,6 @@
 <li>Mapper Pattern</li>
 <li>Shipping</li>
 <li>Resiliency</li>
-<li>Maintenance</li>
 </ul>
 <p class="notes">It can be messy. I'm going to tell you a bunch of assumptions we make at EY about services. These might not be applicable to everyone or even the right set of assumptions for you. But these assumptions frame all of the services we write and will make it easier for me to talk about them. And having these assumptions commons to all services makes it easier for our development team to move between our main app and dependent services whose codebase they may have never looked at before.  So the assumptions are all very basic, but it's important that we have them.</p>
 </div>
@@ -187,7 +186,7 @@
 <div class="content" ref="./slides/13">
 <p><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></p>
 
-<h3>Mapper Pattern: Contacts vs Coupling</h3>
+<h3>Mapper Pattern: Contract vs Coupling</h3>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
 <div class="content bullets incremental begredslash" ref="./slides/14">
@@ -459,12 +458,27 @@ end</code></pre>
 
 <h1>Read-only mode</h1>
 </div>
-</div></body></html><html><body><div style="background: url('file/./pictures/cemetary.jpg') center no-repeat;" class="slide" data-transition="none">
+</div></body></html><html><body><div class="slide" data-transition="none">
 <div class="content" ref="./slides/48">
-<h3>Maintenance</h3>
+<h3>Building Services: Lessons from Engine Yard Add-ons</h3>
+
+<p></p>
+<center>
+<iframe width="560" height="315" src="http://www.youtube.com/embed/jk88Da3jm3c" frameborder="0" allowfullscreen></iframe>
+
+<p>http://youtu.be/jk88Da3jm3c</p>
+</center>
+</div>
+</div></body></html><html><body><div style="background: url('file/./pictures/tidepool.jpg') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/49">
+<h3>Questions?</h3>
+</div>
+</div></body></html><html><body><div style="background: url('file/./pictures/cemetary.jpg') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/50">
+<h3>BONUS CONTENT: Maintenance</h3>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/49">
+<div class="content" ref="./slides/51">
 <h4>Maintenance</h4>
 
 <h1>Continuous Integration</h1>
@@ -478,7 +492,7 @@ end</code></pre>
 <p class="notes">examples of ensemble: build, deploy, release</p>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/50">
+<div class="content" ref="./slides/52">
 <h4>Maintenance</h4>
 
 <h1>The bump release repeat dance</h1>
@@ -486,7 +500,7 @@ end</code></pre>
 <p class="notes">code example of Gemfile hackery?</p>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/51">
+<div class="content" ref="./slides/53">
 <h4>All of the tests</h4>
 
 <ul>
@@ -496,7 +510,7 @@ end</code></pre>
 </ul>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/52">
+<div class="content" ref="./slides/54">
 <h3>Bi-Directional Testing</h3>
 
 <pre class="sh_ruby"><code>RSpec::Core::RakeTask.new(:internal_api_gem) do |t|
@@ -515,21 +529,6 @@ end
 
 task :spec =&gt; ['spec:rails', 'spec:internal_api_gem', 
                'spec:public_api_gem']</code></pre>
-</div>
-</div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/53">
-<h3>Building Services: Lessons from Engine Yard Add-ons</h3>
-
-<p></p>
-<center>
-<iframe width="560" height="315" src="http://www.youtube.com/embed/jk88Da3jm3c" frameborder="0" allowfullscreen></iframe>
-
-<p>http://youtu.be/jk88Da3jm3c</p>
-</center>
-</div>
-</div></body></html><html><body><div style="background: url('file/./pictures/tidepool.jpg') center no-repeat;" class="slide" data-transition="none">
-<div class="content" ref="./slides/54">
-<h3>Questions?</h3>
 </div>
 </div></body></html></div>
 <div id="pauseScreen">
