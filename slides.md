@@ -28,7 +28,6 @@
 * Mapper Pattern
 * Shipping
 * Resiliency
-* Maintenance
 
 .notes It can be messy. I'm going to tell you a bunch of assumptions we make at EY about services. These might not be applicable to everyone or even the right set of assumptions for you. But these assumptions frame all of the services we write and will make it easier for me to talk about them. And having these assumptions commons to all services makes it easier for our development team to move between our main app and dependent services whose codebase they may have never looked at before.  So the assumptions are all very basic, but it's important that we have them.
 
@@ -91,7 +90,7 @@
 <br/><br/><br/><br/>
 <br/><br/><br/><br/>
 <br/><br/><br/>
-### Mapper Pattern: Contacts vs Coupling
+### Mapper Pattern: Contract vs Coupling
 
 !SLIDE bullets incremental begredslash
 ### The Obvious
@@ -330,8 +329,18 @@ http://youtu.be/-IwihDjVvx4
 
 # Read-only mode
 
+!SLIDE
+### Building Services: Lessons from Engine Yard Add-ons
+
+<center><iframe width="560" height="315" src="http://www.youtube.com/embed/jk88Da3jm3c" frameborder="0" allowfullscreen></iframe>
+
+http://youtu.be/jk88Da3jm3c
+
+!SLIDE[bg=pictures/tidepool.jpg]
+### Questions?
+
 !SLIDE[bg=pictures/cemetary.jpg]
-### Maintenance
+### BONUS CONTENT: Maintenance
 
 !SLIDE
 #### Maintenance
@@ -378,14 +387,4 @@ http://youtu.be/-IwihDjVvx4
 
     task :spec => ['spec:rails', 'spec:internal_api_gem', 
                    'spec:public_api_gem']
-
-!SLIDE
-### Building Services: Lessons from Engine Yard Add-ons
-
-<center><iframe width="560" height="315" src="http://www.youtube.com/embed/jk88Da3jm3c" frameborder="0" allowfullscreen></iframe>
-
-http://youtu.be/jk88Da3jm3c
-
-!SLIDE[bg=pictures/tidepool.jpg]
-### Questions?
 
