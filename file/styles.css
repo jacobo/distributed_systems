@@ -269,3 +269,10 @@ h3 small {
         width: 768px;
         position: absolute;
 }
+.tinybr p {
+  height: 1px;
+  margin: 15px;
+}
+.tinybr br {
+  height: 1px;
+}

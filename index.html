@@ -118,7 +118,7 @@
 <div class="content bullets" ref="./slides/5">
 <ul>
 <li>The Basics</li>
-<li>Coupling</li>
+<li>Mapper Pattern</li>
 <li>Shipping</li>
 <li>Resiliency</li>
 <li>Maintenance</li>
@@ -183,22 +183,14 @@
 
 <pre class="sh_ruby"><code>use EY::ApiHMAC::ApiAuth::Server, Consumer</code></pre>
 </div>
-</div></body></html><html><body><div style="background: url('file/./graffles/04-two-way-client.png') center no-repeat;" class="slide" data-transition="none">
+</div></body></html><html><body><div style="background: url('file/./pictures/coupling.jpg') center no-repeat;" class="slide" data-transition="none">
 <div class="content" ref="./slides/13">
-<h4>Bi-Directional API</h4>
-</div>
-</div></body></html><html><body><div style="background: url('file/./graffles/05-multi-client.png') center no-repeat;" class="slide" data-transition="none">
-<div class="content" ref="./slides/14">
-<h4>Multi-Client API</h4>
-</div>
-</div></body></html><html><body><div style="background: url('file/./pictures/messy.png') center no-repeat;" class="slide" data-transition="none">
-<div class="content" ref="./slides/15">
 <p><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></p>
 
-<h3>Coupling</h3>
+<h3>Mapper Pattern: Contacts vs Coupling</h3>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content bullets incremental begredslash" ref="./slides/16">
+<div class="content bullets incremental begredslash" ref="./slides/14">
 <h3>The Obvious</h3>
 
 <p><br></p>
@@ -215,54 +207,63 @@ end</code></pre>
 JSON.parse(Net::HTTP.get_response(uri))</code></pre>
 
 <ul>
-<li>Too Much Coupling!</li>
+<li>Coupled!</li>
+<li>Hard to Test!</li>
 </ul>
 </div>
-</div></body></html><html><body><div style="background: url('file/./pictures/shai.png') center no-repeat;" class="slide" data-transition="none">
-<div class="content" ref="./slides/17">
+</div></body></html><html><body><div style="background: url('file/./pictures/shai.jpg') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/15">
 <h3>Mapper Pattern</h3>
 
 <p class="notes">because this is what your co-workers will do</p>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/18">
-<h3>Talk About The Mapper Pattern</h3>
+<div class="content" ref="./slides/16">
+<h3>Testing HTTP APIs with Ruby</h3>
 
 <p><iframe width="560" height="315" src="http://www.youtube.com/embed/-IwihDjVvx4" frameborder="0" allowfullscreen></iframe></p>
+
+<p>By: Shai Rosenfeld</p>
+
+<p>http://youtu.be/-IwihDjVvx4</p>
 </div>
 </div></body></html><html><body><div style="background: url('file/./graffles/06-simple-mapper.png') center no-repeat;" class="slide" data-transition="none">
-<div class="content" ref="./slides/19">
+<div class="content" ref="./slides/17">
 <h4>Mapper Pattern</h4>
 </div>
+</div></body></html><html><body><div style="background: url('file/./pictures/joe-julian.jpg') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/18">
+<h3>Sinatra in my Rails?</h3>
+</div>
 </div></body></html><html><body><div style="background: url('file/./graffles/07-full-mapper.png') center no-repeat;" class="slide" data-transition="none">
-<div class="content" ref="./slides/20">
+<div class="content" ref="./slides/19">
 <h4>Fake Mapper</h4>
 </div>
 </div></body></html><html><body><div style="background: url('file/./graffles/08-web-req.png') center no-repeat;" class="slide" data-transition="none">
-<div class="content" ref="./slides/21">
+<div class="content" ref="./slides/20">
 <h4>Web Request</h4>
 </div>
 </div></body></html><html><body><div style="background: url('file/./graffles/10-app-tests.png') center no-repeat;" class="slide" data-transition="none">
-<div class="content" ref="./slides/22">
+<div class="content" ref="./slides/21">
 <h4>Client App Tests</h4>
 </div>
 </div></body></html><html><body><div style="background: url('file/./graffles/09-api-tests.png') center no-repeat;" class="slide" data-transition="none">
-<div class="content" ref="./slides/23">
+<div class="content" ref="./slides/22">
 <h4>API Tests</h4>
 </div>
 </div></body></html><html><body><div style="background: url('file/./graffles/11-service-tests.png') center no-repeat;" class="slide" data-transition="none">
-<div class="content" ref="./slides/24">
+<div class="content" ref="./slides/23">
 <h4>Server App Tests</h4>
 </div>
 </div></body></html><html><body><div style="background: url('file/./graffles/12-api.png') center no-repeat;" class="slide" data-transition="none">
-<div class="content" ref="./slides/25">
+<div class="content" ref="./slides/24">
 <h4>API</h4>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/26">
+<div class="content" ref="./slides/25">
 <h3>App Usage</h3>
 
-<pre class="sh_ruby"><code>JohnnyCashApi::Client.send_usage(
+<pre class="sh_ruby"><code>BillingApi::Client.send_usage(
   :uom            =&gt; "Add-on #{invoice.service.name}",
   :quantity       =&gt; invoice.total_amount_cents / 100.0,
   :description    =&gt; invoice.line_item_description,
@@ -270,7 +271,7 @@ JSON.parse(Net::HTTP.get_response(uri))</code></pre>
   :account_sso_id =&gt; invoice.service_account.sso_account_id)</code></pre>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/27">
+<div class="content" ref="./slides/26">
 <h3>API Client</h3>
 
 <pre class="sh_ruby"><code>def self.send_usage(params)
@@ -283,19 +284,23 @@ end</code></pre>
   def send_usage(api_url, params)
     post("#{api_url}usage", :usage =&gt; params)
   end</code></pre>
+
+<p><br></p>
+
+<h2><code>github.com/engineyard/ey_api_hmac</code></h2>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/28">
+<div class="content" ref="./slides/27">
 <h3>Where's the route?</h3>
 
 <p><br></p>
 
-<pre class="sh_ruby"><code>JohnnyCash::Application.routes.draw do
+<pre class="sh_ruby"><code>Billing::Application.routes.draw do
 
-  mount JohnnyCashApi::Server.server, :at =&gt; "/api"</code></pre>
+  mount BillingApi::Server.server, :at =&gt; "/api"</code></pre>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/29">
+<div class="content" ref="./slides/28">
 <h3>Sinatra implements the Server</h3>
 
 <pre class="sh_ruby"><code>class ApiServer &lt; Sinatra::Base
@@ -313,14 +318,14 @@ end</code></pre>
   end</code></pre>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/30">
+<div class="content tinybr" ref="./slides/29">
 <h3>Mapper implements the behavior</h3>
 
-<pre class="sh_ruby"><code>JohnnyCashApi::Server.mapper = JohnnyCashApiMapper</code></pre>
+<pre class="sh_ruby"><code>BillingApi::Server.mapper = BillingApiMapper</code></pre>
 
 <p><br></p>
 
-<pre class="sh_ruby"><code>module JohnnyCashApiMapper
+<pre class="sh_ruby"><code>module BillingApiMapper
   def self.handle_usage(usage_source, account_sso_id, uom, quantity, description, date, remote_id)
     account = Account.find(:sso_id =&gt; account_sso_id)
     account.usages.create!(
@@ -332,34 +337,20 @@ end</code></pre>
       :billing_month =&gt; BillingMonth.lookup(date))
   end</code></pre>
 </div>
-</div></body></html><html><body><div style="background: url('file/./graffles/07-full-mapper.png') center no-repeat;" class="slide" data-transition="none">
-<div class="content" ref="./slides/31">
-<p>&#160;</p>
-</div>
-</div></body></html><html><body><div style="background: url('file/./pictures/joe-julian.png') center no-repeat;" class="slide" data-transition="none">
-<div class="content" ref="./slides/32">
-<h3>Sinatra in my Rails?</h3>
-</div>
-</div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/33">
-<h3>Mock Mode</h3>
-
-<pre class="sh_ruby"><code>EY::ServicesAPI.enable_mock!(Rails::Application)
-@mock_backend = EY::ServicesAPI.mock_backend
-Capybara.app = @mock_backend.app</code></pre>
-</div>
-</div></body></html><html><body><div style="background: url('file/./graffles/07-full-mapper.png') center no-repeat;" class="slide" data-transition="none">
-<div class="content" ref="./slides/34">
+</div></body></html><html><body><div style="background: url('file/./pictures/youngjacob.jpg') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/30">
 <h3>XML-RPC / SOAP</h3>
+
+<h3>Remote Procedure Calls</h3>
 </div>
 </div></body></html><html><body><div style="background: url('file/./pictures/joshthom.jpg') center no-repeat;" class="slide" data-transition="none">
-<div class="content" ref="./slides/35">
+<div class="content" ref="./slides/31">
 <h3>Shipping</h3>
 
 <p class="notes">TODO: picture of Thom and Josh?</p>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/36">
+<div class="content" ref="./slides/32">
 <h4>Shipping a Service</h4>
 
 <h1>Do it Live</h1>
@@ -367,31 +358,31 @@ Capybara.app = @mock_backend.app</code></pre>
 <h1>Do it Incrementally</h1>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/37">
+<div class="content" ref="./slides/33">
 <h4>Shipping a Service</h4>
 
 <h1>4 step migration</h1>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/38">
+<div class="content" ref="./slides/34">
 <h4>Shipping a Service</h4>
 
 <h1>1. support the old way</h1>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/39">
+<div class="content" ref="./slides/35">
 <h4>Shipping a Service</h4>
 
 <h1>2. support the new way and the old way at the same time</h1>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/40">
+<div class="content" ref="./slides/36">
 <h4>Shipping a Service</h4>
 
 <h1>3. upgrade every dependent system</h1>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/41">
+<div class="content" ref="./slides/37">
 <h4>Shipping a Service</h4>
 
 <h1>4. support only the new way</h1>
@@ -399,7 +390,7 @@ Capybara.app = @mock_backend.app</code></pre>
 <p>(Yay! throw away all that crappy old code from the old way).</p>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/42">
+<div class="content" ref="./slides/38">
 <h4>Shipping a Service</h4>
 
 <h1>There will be bugs</h1>
@@ -410,12 +401,12 @@ Capybara.app = @mock_backend.app</code></pre>
 
 <p class="notes">There will be bugs, so be prepared to rollback.  "support the new way and the old way at the same time" is actually 2 steps. First you do it on the server, then you do it on the client.  And use feature flags so you don't have to deploy to rollback.</p>
 </div>
-</div></body></html><html><body><div style="background: url('file/./pictures/slack.png') center no-repeat;" class="slide" data-transition="none">
-<div class="content" ref="./slides/43">
+</div></body></html><html><body><div style="background: url('file/./pictures/slack.jpg') center no-repeat;" class="slide" data-transition="none">
+<div class="content" ref="./slides/39">
 <h3>Design for Resiliency</h3>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/44">
+<div class="content" ref="./slides/40">
 <h4>Design for Resiliency</h4>
 
 <h1>Track Exceptions</h1>
@@ -423,13 +414,13 @@ Capybara.app = @mock_backend.app</code></pre>
 <h1>Log Events</h1>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/45">
+<div class="content" ref="./slides/41">
 <h4>Design for Resiliency</h4>
 
 <h1>Retry 500s</h1>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/46">
+<div class="content" ref="./slides/42">
 <h4>Design for Resiliency</h4>
 
 <h1>Rack-Client</h1>
@@ -437,13 +428,13 @@ Capybara.app = @mock_backend.app</code></pre>
 <h1>Rack-Idempotent</h1>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/47">
+<div class="content" ref="./slides/43">
 <h4>Design for Resiliency</h4>
 
 <h1>Timeout</h1>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/48">
+<div class="content" ref="./slides/44">
 <h4>Design for Resiliency</h4>
 
 <h1>Avoid side effects, model intent locally</h1>
@@ -451,29 +442,29 @@ Capybara.app = @mock_backend.app</code></pre>
 <p class="notes">LaBrea problems. (much of which was solved by rack-client + rack-idempotent) weren't being sent to airbrake because of unicorn timeout. Our own timeout wasn't working because it was happening in C blocking network IO on connection to labrea. We were swallowing the exceptions because of a unicorn timeout, or because of a blanket (failure to connect to instance) error.  Having new relic would have helped us see that labrea or keymaster was having response time issues.  Needed better error handling. Never assume that it's safe to rescue exceptions from an operation you performed. Don't make service calls as after_save side effects. use a "state" or other local column to keep track of if the service call was made or not.</p>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/49">
+<div class="content" ref="./slides/45">
 <h4>Design for Resiliency</h4>
 
 <h1>Cache (using Redis)</h1>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/50">
+<div class="content" ref="./slides/46">
 <h4>Design for Resiliency</h4>
 
 <h1>Ajax loading</h1>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/51">
+<div class="content" ref="./slides/47">
 <h4>Design for Resiliency</h4>
 
 <h1>Read-only mode</h1>
 </div>
 </div></body></html><html><body><div style="background: url('file/./pictures/cemetary.jpg') center no-repeat;" class="slide" data-transition="none">
-<div class="content" ref="./slides/52">
+<div class="content" ref="./slides/48">
 <h3>Maintenance</h3>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/53">
+<div class="content" ref="./slides/49">
 <h4>Maintenance</h4>
 
 <h1>Continuous Integration</h1>
@@ -487,7 +478,7 @@ Capybara.app = @mock_backend.app</code></pre>
 <p class="notes">examples of ensemble: build, deploy, release</p>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/54">
+<div class="content" ref="./slides/50">
 <h4>Maintenance</h4>
 
 <h1>The bump release repeat dance</h1>
@@ -495,7 +486,7 @@ Capybara.app = @mock_backend.app</code></pre>
 <p class="notes">code example of Gemfile hackery?</p>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/55">
+<div class="content" ref="./slides/51">
 <h4>All of the tests</h4>
 
 <ul>
@@ -505,7 +496,7 @@ Capybara.app = @mock_backend.app</code></pre>
 </ul>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/56">
+<div class="content" ref="./slides/52">
 <h3>Bi-Directional Testing</h3>
 
 <pre class="sh_ruby"><code>RSpec::Core::RakeTask.new(:internal_api_gem) do |t|
@@ -526,16 +517,18 @@ task :spec =&gt; ['spec:rails', 'spec:internal_api_gem',
                'spec:public_api_gem']</code></pre>
 </div>
 </div></body></html><html><body><div class="slide" data-transition="none">
-<div class="content" ref="./slides/57">
-<h3>See Also</h3>
+<div class="content" ref="./slides/53">
+<h3>Building Services: Lessons from Engine Yard Add-ons</h3>
 
 <p></p>
 <center>
 <iframe width="560" height="315" src="http://www.youtube.com/embed/jk88Da3jm3c" frameborder="0" allowfullscreen></iframe>
+
+<p>http://youtu.be/jk88Da3jm3c</p>
 </center>
 </div>
 </div></body></html><html><body><div style="background: url('file/./pictures/tidepool.jpg') center no-repeat;" class="slide" data-transition="none">
-<div class="content" ref="./slides/58">
+<div class="content" ref="./slides/54">
 <h3>Questions?</h3>
 </div>
 </div></body></html></div>
