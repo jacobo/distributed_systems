@@ -25,7 +25,7 @@
 !SLIDE bullets
 
 * The Basics
-* Coupling
+* Mapper Pattern
 * Shipping
 * Resiliency
 * Maintenance
@@ -86,18 +86,12 @@
     @@@ruby
     use EY::ApiHMAC::ApiAuth::Server, Consumer
 
-!SLIDE[bg=graffles/04-two-way-client.png]
-#### Bi-Directional API
-
-!SLIDE[bg=graffles/05-multi-client.png]
-#### Multi-Client API
-
-!SLIDE[bg=pictures/messy.png]
+!SLIDE[bg=pictures/coupling.jpg]
 <br/><br/><br/><br/>
 <br/><br/><br/><br/>
 <br/><br/><br/><br/>
 <br/><br/><br/>
-### Coupling
+### Mapper Pattern: Contacts vs Coupling
 
 !SLIDE bullets incremental begredslash
 ### The Obvious
@@ -117,20 +111,28 @@
     uri = URI.parse("http://foo.engineyard.com/elephants/1")
     JSON.parse(Net::HTTP.get_response(uri))
 
-* Too Much Coupling!
+* Coupled!
+* Hard to Test!
 
-!SLIDE[bg=pictures/shai.png]
+!SLIDE[bg=pictures/shai.jpg]
 ### Mapper Pattern
 
 .notes because this is what your co-workers will do
 
 !SLIDE
-### Talk About The Mapper Pattern
+### Testing HTTP APIs with Ruby
 
 <iframe width="560" height="315" src="http://www.youtube.com/embed/-IwihDjVvx4" frameborder="0" allowfullscreen></iframe></center>
 
+By: Shai Rosenfeld
+
+http://youtu.be/-IwihDjVvx4
+
 !SLIDE[bg=graffles/06-simple-mapper.png]
 #### Mapper Pattern
+
+!SLIDE[bg=pictures/joe-julian.jpg]
+### Sinatra in my Rails?
 
 !SLIDE[bg=graffles/07-full-mapper.png]
 #### Fake Mapper
@@ -154,7 +156,7 @@
 ### App Usage
 
     @@@ruby
-    JohnnyCashApi::Client.send_usage(
+    BillingApi::Client.send_usage(
       :uom            => "Add-on #{invoice.service.name}",
       :quantity       => invoice.total_amount_cents / 100.0,
       :description    => invoice.line_item_description,
@@ -178,15 +180,19 @@
         post("#{api_url}usage", :usage => params)
       end
 
+<br/>
+
+## `github.com/engineyard/ey_api_hmac`
+
 !SLIDE
 ### Where's the route?
 
 <br/>
 
     @@@ruby
-    JohnnyCash::Application.routes.draw do
+    Billing::Application.routes.draw do
 
-      mount JohnnyCashApi::Server.server, :at => "/api"
+      mount BillingApi::Server.server, :at => "/api"
 
 !SLIDE
 ### Sinatra implements the Server
@@ -206,16 +212,16 @@
         {}.to_json
       end
 
-!SLIDE
+!SLIDE tinybr
 ### Mapper implements the behavior
 
     @@@ruby
-    JohnnyCashApi::Server.mapper = JohnnyCashApiMapper
+    BillingApi::Server.mapper = BillingApiMapper
 
 <br/>
 
     @@@ruby
-    module JohnnyCashApiMapper
+    module BillingApiMapper
       def self.handle_usage(usage_source, account_sso_id, uom, quantity, description, date, remote_id)
         account = Account.find(:sso_id => account_sso_id)
         account.usages.create!(
@@ -227,22 +233,9 @@
           :billing_month => BillingMonth.lookup(date))
       end
 
-!SLIDE[bg=graffles/07-full-mapper.png]
-&nbsp;
-
-!SLIDE[bg=pictures/joe-julian.png]
-### Sinatra in my Rails?
-
-!SLIDE
-### Mock Mode
-
-    @@@ruby
-    EY::ServicesAPI.enable_mock!(Rails::Application)
-    @mock_backend = EY::ServicesAPI.mock_backend
-    Capybara.app = @mock_backend.app
-
-!SLIDE[bg=graffles/07-full-mapper.png]
+!SLIDE[bg=pictures/youngjacob.jpg]
 ### XML-RPC / SOAP
+### Remote Procedure Calls
 
 !SLIDE[bg=pictures/joshthom.jpg]
 ### Shipping
@@ -290,7 +283,7 @@
 
 .notes There will be bugs, so be prepared to rollback.  "support the new way and the old way at the same time" is actually 2 steps. First you do it on the server, then you do it on the client.  And use feature flags so you don't have to deploy to rollback.
 
-!SLIDE[bg=pictures/slack.png]
+!SLIDE[bg=pictures/slack.jpg]
 ### Design for Resiliency
 
 !SLIDE
@@ -387,10 +380,11 @@
                    'spec:public_api_gem']
 
 !SLIDE
-### See Also
+### Building Services: Lessons from Engine Yard Add-ons
 
 <center><iframe width="560" height="315" src="http://www.youtube.com/embed/jk88Da3jm3c" frameborder="0" allowfullscreen></iframe>
 
+http://youtu.be/jk88Da3jm3c
 
 !SLIDE[bg=pictures/tidepool.jpg]
 ### Questions?
